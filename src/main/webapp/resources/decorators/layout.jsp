@@ -35,9 +35,6 @@
 	<div class="container">
 		<div class="banner"><jsp:include page="/resources/decorators/banner.jsp" /></div>
 		<div class="menuPrincipal"><jsp:include page="/content/menus/menuProyecto.jsp" /></div>
-		<div class="menuSecundario">
-			<jsp:include page="/resources/decorators/menus/menuSecundario.jsp" />
-		</div>
 		<div class="areaTrabajo" id ="idAreaTrabajo">
 			<decorator:body /> 
 		</div>
@@ -46,7 +43,8 @@
  		value="${pageContext.request.contextPath}" />
  		
  	<s:if test="#session != null">
- 		<s:param value="#session.correo"/>
+ 	<input type="text" style="display: none;" id="correoSession"
+ 		value="${session.correo}" />
  	</s:if>
  	
 </body>
