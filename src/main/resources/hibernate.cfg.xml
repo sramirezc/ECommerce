@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory name="">
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/ECommerce</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.current_session_context_class">thread</property>
+		<property name="hibernate.enable_lazy_load_no_trans">true</property>
+		<property name="show_sql">false</property>
+		<mapping class="mx.ecomerce.model.Atributo" />
+		<mapping class="mx.ecomerce.model.AtributoCategoria" />
+		<mapping class="mx.ecomerce.model.Categoria" />
+		<mapping class="mx.ecomerce.model.CategoriaProducto" />
+		<mapping class="mx.ecomerce.model.Compra" />
+		<mapping class="mx.ecomerce.model.Atributo" />
+		<mapping class="mx.ecomerce.model.CompraProducto" />
+		<mapping class="mx.ecomerce.model.Estado" />
+		<mapping class="mx.ecomerce.model.Perfil" />
+		<mapping class="mx.ecomerce.model.Producto" />
+		<mapping class="mx.ecomerce.model.Usuario" />
+		<mapping class="mx.ecomerce.model.Valor" />
+	</session-factory>
+</hibernate-configuration>
