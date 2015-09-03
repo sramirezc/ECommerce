@@ -14,6 +14,8 @@
 		respuesta correcta, se utilizará el siguiente mapper -->
 	<constant name="struts.mapper.class" value="rest" />
 	<!-- <constant name="struts.mapper.composite" value="rest,struts" /> -->
+	
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/> 
 
 	<!-- struts2 busca paquetes que terminen, en su nombre, con las siguientes 
 		cadenas en busca de acciones -->

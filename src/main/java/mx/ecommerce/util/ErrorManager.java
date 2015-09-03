@@ -29,8 +29,7 @@ public class ErrorManager {
 		} else {
 			ap.addActionError(ap.getText("MSG13"));
 		}
-		
-		System.err.println(ex.getMessage());
+		SessionManager.set(ap.getActionErrors(), "mensajesError");
 		ex.printStackTrace();
 	}
 }

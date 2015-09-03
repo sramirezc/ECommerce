@@ -43,6 +43,7 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 	@SuppressWarnings("unchecked")
 	public String index() {
 		Collection<String> mensajes;
+		Collection<String> mensajesError;
 		
 		resultado = INDEX;
 			
@@ -58,7 +59,10 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 				}
 			}
 			mensajes = (Collection<String>) SessionManager.get("mensajesAccion");	
+			mensajesError = (Collection<String>) SessionManager.get("mensajesError");	
 			this.setActionMessages(mensajes);
+			this.setActionErrors(mensajesError);
+			SessionManager.delete("mensajesError");
 			SessionManager.delete("mensajesAccion");
 
 		} catch (ECommerceException pe) {
@@ -144,6 +148,20 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 			resultado = index();
 		}
 		return resultado;
+	}
+	
+	public static String getMenu(String correo) {
+		System.out.println("Method " + correo);
+		if (UsuarioBs.isAdministrador(UsuarioBs.findById(correo))) {
+			return "adminMenu";
+		}
+		if (UsuarioBs.isCliente(UsuarioBs.findById(correo))) {
+			return "customerMenu";
+		}
+		if (UsuarioBs.isAlmacen(UsuarioBs.findById(correo))){
+			return "storeMenu";
+		}
+		return "error";
 	}
 
 	public void setSession(Map<String, Object> session) {

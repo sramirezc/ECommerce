@@ -1,6 +1,7 @@
 package mx.ecommerce.bs;
 
 import mx.ecommerce.bs.PerfilBs.Perfil;
+import mx.ecommerce.dao.UsuarioDAO;
 import mx.ecommerce.model.Usuario;
 
 public class UsuarioBs {
@@ -25,5 +26,9 @@ public class UsuarioBs {
 		} else {
 			return false;
 		}
+	}
+	
+	public static Usuario findById(String correo) {
+		return new UsuarioDAO().findById(correo);
 	}
 }
