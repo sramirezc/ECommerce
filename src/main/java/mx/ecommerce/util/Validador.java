@@ -1,9 +1,15 @@
 package mx.ecommerce.util;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
+import mx.ecommerce.dao.AtributoDAO;
+import mx.ecommerce.model.Atributo;
+
+import org.hibernate.HibernateException;
 
 public class Validador {
 
@@ -19,7 +25,7 @@ public class Validador {
 		return clave.length() > i;
 	}
 
-	public static boolean esNuloOVacio(Set set) {
+	public static boolean esNuloOVacio(Set<?> set) {
 		return set == null || set.size() == 0;
 	}
 
@@ -39,6 +45,27 @@ public class Validador {
 		}
 		return correo;
 
+	}
+
+	public static boolean isDuplicado(Atributo model) throws Exception {
+		List<Atributo> atributos = null;
+
+		try {
+			atributos = new AtributoDAO().findByName(model.getNombre());
+			if (atributos != null && atributos.isEmpty()) {
+				return false;
+			} else
+				for (Atributo atributo : atributos) {
+					if (atributo.getId() != model.getId()) {
+						return true;
+					}
+				}
+
+		} catch (HibernateException he) {
+			he.printStackTrace();
+			throw new Exception();
+		}
+		return false;
 	}
 
 }

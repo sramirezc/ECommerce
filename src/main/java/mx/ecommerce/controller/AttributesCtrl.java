@@ -20,21 +20,23 @@ import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ModelDriven;
 
 @ResultPath("/content/admin/attributes/")
 @Results({ @Result(name = ActionSupportECommerce.SUCCESS, type = "redirectAction", params = {
-		"actionName", "attributes" })
-})
-public class AttributesCtrl extends ActionSupportECommerce implements SessionAware {
+		"actionName", "attributes" }) })
+public class AttributesCtrl extends ActionSupportECommerce implements
+		SessionAware, ModelDriven<Atributo> {
 
 	private static final long serialVersionUID = 1L;
 	private Map<String, Object> userSession;
 	private Usuario usuario;
 	String resultado;
+	Integer idSel;
 
 	private Atributo model;
 	private List<Atributo> listAtributos;
-	
+
 	@SuppressWarnings("unchecked")
 	public String index() throws Exception {
 		Collection<String> mensajes;
@@ -46,7 +48,7 @@ public class AttributesCtrl extends ActionSupportECommerce implements SessionAwa
 			}
 			resultado = INDEX;
 			listAtributos = AtributoBs.findAll();
-			
+
 			mensajes = (Collection<String>) SessionManager
 					.get("mensajesAccion");
 			this.setActionMessages(mensajes);
@@ -60,7 +62,7 @@ public class AttributesCtrl extends ActionSupportECommerce implements SessionAwa
 		}
 		return resultado;
 	}
-	
+
 	public String editNew() throws Exception {
 		String resultado = null;
 		try {
@@ -72,11 +74,10 @@ public class AttributesCtrl extends ActionSupportECommerce implements SessionAwa
 		} catch (ECommerceException pe) {
 			System.err.println(pe.getMessage());
 			ErrorManager.agregaMensajeError(this, pe);
-			resultado = index();
+			resultado = Action.LOGIN;
 		} catch (Exception e) {
 			e.printStackTrace();
-			ErrorManager.agregaMensajeError(this, e);
-			resultado = index();
+			resultado = Action.LOGIN;
 		}
 		return resultado;
 	}
@@ -90,13 +91,77 @@ public class AttributesCtrl extends ActionSupportECommerce implements SessionAwa
 			}
 			AtributoBs.save(model);
 			resultado = SUCCESS;
-			addActionMessage(getText("MSG5", new String[] { "El",
-					"Atributo", "registrado" }));
+			addActionMessage(getText("MSG5", new String[] { "El", "atributo",
+					"registrado" }));
 
 			SessionManager.set(this.getActionMessages(), "mensajesAccion");
 		} catch (ECommerceValidacionException pve) {
 			ErrorManager.agregaMensajeError(this, pve);
 			resultado = editNew();
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			ErrorManager.agregaMensajeError(this, e);
+			resultado = index();
+		}
+		return resultado;
+	}
+
+	public String edit() throws Exception {
+		String resultado = null;
+		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAdministrador(usuario)) {
+				resultado = Action.LOGIN;
+			}
+			resultado = EDIT;
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			ErrorManager.agregaMensajeError(this, e);
+			resultado = index();
+		}
+
+		return resultado;
+
+	}
+
+	public String update() throws Exception {
+		String resultado = null;
+		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAdministrador(usuario)) {
+				resultado = Action.LOGIN;
+			}
+			System.out.println("Nomber" + model.getNombre());
+			AtributoBs.update(model);
+			resultado = SUCCESS;
+			addActionMessage(getText("MSG5", new String[] { "El", "atributo",
+					"modificado" }));
+			SessionManager.set(this.getActionMessages(), "mensajesAccion");
+		} catch (ECommerceValidacionException pve) {
+			ErrorManager.agregaMensajeError(this, pve);
+			resultado = edit();
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			ErrorManager.agregaMensajeError(this, e);
+			resultado = index();
+		}
+		return resultado;
+	}
+
+	public String destroy() throws Exception {
+		String resultado = null;
+		try {
+			AtributoBs.delete(model);
+			resultado = SUCCESS;
+			addActionMessage(getText("MSG5", new String[] { "El", "atributo",
+					"eliminado" }));
+			SessionManager.set(this.getActionMessages(), "mensajesAccion");
 		} catch (ECommerceException pe) {
 			ErrorManager.agregaMensajeError(this, pe);
 			resultado = index();
@@ -127,7 +192,18 @@ public class AttributesCtrl extends ActionSupportECommerce implements SessionAwa
 		this.listAtributos = listAtributos;
 	}
 
+	public Atributo getModel() {
+		return (model == null) ? model = new Atributo() : model;
 
-	
+	}
+
+	public int getIdSel() {
+		return idSel;
+	}
+
+	public void setIdSel(int idSel) throws Exception {
+		this.idSel = idSel;
+		model = AtributoBs.findById(idSel);
+	}
 
 }

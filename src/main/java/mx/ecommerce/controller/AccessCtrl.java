@@ -14,12 +14,15 @@ import mx.ecommerce.util.SessionManager;
 
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.ResultPath;
 import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionContext;
 
 @InterceptorRef(value="defaultStack")
+@ResultPath("/content/")
+
 @Results({
 		@Result(name = "admin", type = "redirectAction", params = {
 				"actionName", "admin" }),
