@@ -10,6 +10,7 @@ import mx.ecommerce.model.Atributo;
 import mx.ecommerce.model.Usuario;
 import mx.ecommerce.util.ActionSupportECommerce;
 import mx.ecommerce.util.ECommerceException;
+import mx.ecommerce.util.ECommerceValidacionException;
 import mx.ecommerce.util.ErrorManager;
 import mx.ecommerce.util.SessionManager;
 
@@ -31,11 +32,11 @@ public class AttributesCtrl extends ActionSupportECommerce implements SessionAwa
 	private Usuario usuario;
 	String resultado;
 
+	private Atributo model;
 	private List<Atributo> listAtributos;
 	
 	@SuppressWarnings("unchecked")
 	public String index() throws Exception {
-		System.out.println("test");
 		Collection<String> mensajes;
 
 		try {
@@ -56,6 +57,52 @@ public class AttributesCtrl extends ActionSupportECommerce implements SessionAwa
 			resultado = Action.LOGIN;
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return resultado;
+	}
+	
+	public String editNew() throws Exception {
+		String resultado = null;
+		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAdministrador(usuario)) {
+				resultado = Action.LOGIN;
+			}
+			resultado = EDITNEW;
+		} catch (ECommerceException pe) {
+			System.err.println(pe.getMessage());
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			e.printStackTrace();
+			ErrorManager.agregaMensajeError(this, e);
+			resultado = index();
+		}
+		return resultado;
+	}
+
+	public String create() throws Exception {
+		String resultado = null;
+		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAdministrador(usuario)) {
+				resultado = Action.LOGIN;
+			}
+			AtributoBs.save(model);
+			resultado = SUCCESS;
+			addActionMessage(getText("MSG5", new String[] { "El",
+					"Atributo", "registrado" }));
+
+			SessionManager.set(this.getActionMessages(), "mensajesAccion");
+		} catch (ECommerceValidacionException pve) {
+			ErrorManager.agregaMensajeError(this, pve);
+			resultado = editNew();
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			ErrorManager.agregaMensajeError(this, e);
+			resultado = index();
 		}
 		return resultado;
 	}

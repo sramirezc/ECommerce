@@ -9,4 +9,8 @@ public class AtributoBs {
 	public static List <Atributo> findAll() {
 		return new AtributoDAO().findAll();
 	}
+	
+	public static void save(Atributo atributo) throws Exception {
+		new AtributoDAO().save(atributo);
+	}
 }
