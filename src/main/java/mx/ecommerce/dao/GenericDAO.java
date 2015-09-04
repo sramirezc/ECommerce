@@ -52,22 +52,6 @@ public class GenericDAO {
 			throw he;
 		}
 	}
-
-	public Object findById(Class<?> clazz, String id) {
-		Object object = null;
-		
-		try {
-			session.beginTransaction();
-			object = (Object) session.get(clazz, id);
-			session.getTransaction().commit();
-		} catch (HibernateException he) {
-			he.printStackTrace();
-			session.getTransaction().rollback();
-			throw he;
-		}
-		return object;
-
-	}
 	
 	public Object findById(Class<?> clazz, Integer id) {
 		Object object = null;

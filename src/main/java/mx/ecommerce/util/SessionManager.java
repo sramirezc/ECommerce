@@ -2,6 +2,7 @@ package mx.ecommerce.util;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,12 +79,12 @@ public class SessionManager {
 		HttpSession session = ServletActionContext.getRequest().getSession(
 				false);
 		Usuario usuario = null;
-		String correo = "";
-		if (session != null && session.getAttribute("correo") != null) {
-			correo = (String) session.getAttribute("correo");
+		Integer id = null;
+		if (session != null && session.getAttribute("id") != null) {
+			id = (Integer) session.getAttribute("id");
 		}
 
-		usuario = new UsuarioDAO().findById(correo);
+		usuario = new UsuarioDAO().findById(id);
 
 		if (usuario == null) {
 			throw new ECommerceException("No se puede consultar el usuario",

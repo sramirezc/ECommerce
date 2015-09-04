@@ -4,10 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import mx.ecommerce.bs.AtributoBs;
+import mx.ecommerce.bs.PerfilBs;
+import mx.ecommerce.bs.PerfilBs.PerfilEnum;
 import mx.ecommerce.bs.UsuarioBs;
-import mx.ecommerce.model.Atributo;
 import mx.ecommerce.model.Usuario;
+import mx.ecommerce.model.Perfil;
 import mx.ecommerce.util.ActionSupportECommerce;
 import mx.ecommerce.util.ECommerceException;
 import mx.ecommerce.util.ECommerceValidacionException;
@@ -22,11 +23,11 @@ import org.apache.struts2.interceptor.SessionAware;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 
-@ResultPath("/content/admin/attributes/")
+@ResultPath("/content/admin/users-store/")
 @Results({ @Result(name = ActionSupportECommerce.SUCCESS, type = "redirectAction", params = {
-		"actionName", "attributes" }) })
-public class UserCtrl extends ActionSupportECommerce implements
-		SessionAware, ModelDriven<Atributo> {
+		"actionName", "users-store" }) })
+public class UsersStoreCtrl extends ActionSupportECommerce implements
+		SessionAware, ModelDriven<Usuario> {
 
 	private static final long serialVersionUID = 1L;
 	private Map<String, Object> userSession;
@@ -34,8 +35,8 @@ public class UserCtrl extends ActionSupportECommerce implements
 	String resultado;
 	Integer idSel;
 
-	private Atributo model;
-	private List<Atributo> listAtributos;
+	private Usuario model;
+	private List<Usuario> listUsuariosAlmacen;
 
 	@SuppressWarnings("unchecked")
 	public String index() throws Exception {
@@ -47,7 +48,7 @@ public class UserCtrl extends ActionSupportECommerce implements
 				resultado = Action.LOGIN;
 			}
 			resultado = INDEX;
-			listAtributos = AtributoBs.findAll();
+			listUsuariosAlmacen = UsuarioBs.findByPerfil(PerfilBs.PerfilEnum.ALMACEN);
 
 			mensajes = (Collection<String>) SessionManager
 					.get("mensajesAccion");
@@ -62,7 +63,7 @@ public class UserCtrl extends ActionSupportECommerce implements
 		}
 		return resultado;
 	}
-
+	
 	public String editNew() throws Exception {
 		String resultado = null;
 		try {
@@ -89,7 +90,9 @@ public class UserCtrl extends ActionSupportECommerce implements
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
 			}
-			AtributoBs.save(model);
+			Perfil perfil =  PerfilBs.findById(PerfilBs.getId(PerfilEnum.ALMACEN));
+			model.setPerfil(perfil);
+			UsuarioBs.save(model);
 			resultado = SUCCESS;
 			addActionMessage(getText("MSG5", new String[] { "El", "atributo",
 					"registrado" }));
@@ -135,9 +138,9 @@ public class UserCtrl extends ActionSupportECommerce implements
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
 			}
-			AtributoBs.update(model);
+			UsuarioBs.update(model);
 			resultado = SUCCESS;
-			addActionMessage(getText("MSG5", new String[] { "El", "atributo",
+			addActionMessage(getText("MSG5", new String[] { "El", "usuario",
 					"modificado" }));
 			SessionManager.set(this.getActionMessages(), "mensajesAccion");
 		} catch (ECommerceValidacionException pve) {
@@ -156,9 +159,9 @@ public class UserCtrl extends ActionSupportECommerce implements
 	public String destroy() throws Exception {
 		String resultado = null;
 		try {
-			AtributoBs.delete(model);
+			UsuarioBs.delete(model);
 			resultado = SUCCESS;
-			addActionMessage(getText("MSG5", new String[] { "El", "atributo",
+			addActionMessage(getText("MSG5", new String[] { "El", "usuario",
 					"eliminado" }));
 			SessionManager.set(this.getActionMessages(), "mensajesAccion");
 		} catch (ECommerceException pe) {
@@ -183,26 +186,30 @@ public class UserCtrl extends ActionSupportECommerce implements
 		this.userSession = userSession;
 	}
 
-	public List<Atributo> getListAtributos() {
-		return listAtributos;
+	public List<Usuario> getListUsuariosAlmacen() {
+		return listUsuariosAlmacen;
 	}
 
-	public void setListAtributos(List<Atributo> listAtributos) {
-		this.listAtributos = listAtributos;
+	public void setListUsuariosAlmacen(List<Usuario> listUsuariosAlmacen) {
+		this.listUsuariosAlmacen = listUsuariosAlmacen;
 	}
 
-	public Atributo getModel() {
-		return (model == null) ? model = new Atributo() : model;
+	public void setModel(Usuario model) {
+		this.model = model;
+	}
+
+	public Usuario getModel() {
+		return (model == null) ? model = new Usuario() : model;
 
 	}
 
-	public int getIdSel() {
+	public Integer getIdSel() {
 		return idSel;
 	}
 
-	public void setIdSel(int idSel) throws Exception {
+	public void setIdSel(Integer idSel) throws Exception {
 		this.idSel = idSel;
-		model = AtributoBs.findById(idSel);
+		model = UsuarioBs.findById(idSel);
 	}
 
 }

@@ -86,7 +86,7 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 			usuario = AccessBs.verificarLogin(userName, password);
 			session = ActionContext.getContext().getSession();
 			session.put("login", true);
-			session.put("correo", usuario.getCorreo());
+			session.put("id", usuario.getId());
 			setSession(session);
 			if (UsuarioBs.isAdministrador(usuario)) {
 				resultado = "admin";
@@ -153,14 +153,14 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 		return resultado;
 	}
 	
-	public static String getMenu(String correo) {
-		if (UsuarioBs.isAdministrador(UsuarioBs.findById(correo))) {
+	public static String getMenu(Integer id) throws Exception {
+		if (UsuarioBs.isAdministrador(UsuarioBs.findById(id))) {
 			return "adminMenu";
 		}
-		if (UsuarioBs.isCliente(UsuarioBs.findById(correo))) {
+		if (UsuarioBs.isCliente(UsuarioBs.findById(id))) {
 			return "customerMenu";
 		}
-		if (UsuarioBs.isAlmacen(UsuarioBs.findById(correo))){
+		if (UsuarioBs.isAlmacen(UsuarioBs.findById(id))){
 			return "storeMenu";
 		}
 		return "error";

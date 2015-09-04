@@ -8,8 +8,10 @@ import javax.mail.internet.InternetAddress;
 
 import mx.ecommerce.dao.AtributoDAO;
 import mx.ecommerce.dao.CategoriaDAO;
+import mx.ecommerce.dao.UsuarioDAO;
 import mx.ecommerce.model.Atributo;
 import mx.ecommerce.model.Categoria;
+import mx.ecommerce.model.Usuario;
 
 import org.hibernate.HibernateException;
 
@@ -89,6 +91,22 @@ public class Validador {
 			throw new Exception();
 		}
 		return false;
+	}
+	
+	public static boolean isDuplicado(Usuario model) throws Exception {
+		List<Usuario> usuarios = null;
+
+		try {
+			usuarios = new UsuarioDAO().findByCorreo(model.getCorreo());
+			if (usuarios != null && !usuarios.isEmpty()) {
+				return true;
+			} else
+				return false;
+
+		} catch (HibernateException he) {
+			he.printStackTrace();
+			throw new Exception();
+		}
 	}
 
 }

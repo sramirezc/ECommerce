@@ -40,9 +40,9 @@
 				<div class="menuPrincipal">
 		<s:if test="#session != null">
 			<s:if test="#session.login == true">
-				<s:set name="correo" value="#session.correo"></s:set>
+				<s:set name="id" value="#session.id"></s:set>
 				<s:set var="perfil">/content/menus/<s:property
-						value="@mx.ecommerce.controller.AccessCtrl@getMenu(#correo)"/>.jsp</s:set>
+						value="@mx.ecommerce.controller.AccessCtrl@getMenu(#id)"/>.jsp</s:set>
 				<jsp:include page="${perfil}" />
 			</s:if>
 		</s:if>

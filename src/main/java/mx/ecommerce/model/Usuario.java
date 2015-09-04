@@ -2,9 +2,12 @@ package mx.ecommerce.model;
 
 // Generated 01-sep-2015 1:09:11 by Hibernate Tools 4.0.0
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,6 +24,7 @@ public class Usuario implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private Integer id;
 	private String correo;
 	private String nombre;
 	private String apPaterno;
@@ -40,8 +44,18 @@ public class Usuario implements java.io.Serializable {
 		this.password = password;
 		this.perfil = perfil;
 	}
-
+	
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Column(name = "correo", unique = true, nullable = false, length = 20)
 	public String getCorreo() {
 		return this.correo;
