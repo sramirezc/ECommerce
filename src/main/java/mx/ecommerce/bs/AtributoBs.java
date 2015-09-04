@@ -1,5 +1,6 @@
 package mx.ecommerce.bs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mx.ecommerce.dao.AtributoDAO;
@@ -45,7 +46,6 @@ public class AtributoBs {
 				if(je.getErrorCode() == 1451) {
 					throw new ECommerceException("No es posible eliminar el atributo porque se encuentra asociado a otros elementos.", "MSG8");
 				}
-				System.out.println("ERROR CODE " + je.getErrorCode());
 				je.printStackTrace();
 				throw new Exception();
 		} catch(HibernateException he) {
@@ -65,6 +65,18 @@ public class AtributoBs {
 		}
 		
 		return atributo;
+	}
+	
+	public static Atributo findByName(String name) throws Exception {
+		List<Atributo> atributos = new ArrayList<Atributo>();
+		try {
+			atributos = new AtributoDAO().findByName(name);
+		} catch (HibernateException he) {
+			he.printStackTrace();
+			throw new Exception();
+		}
+		
+		return atributos.get(0);
 	}
 
 

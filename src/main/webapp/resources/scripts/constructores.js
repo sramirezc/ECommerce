@@ -1,7 +1,4 @@
-function CasoUso (id, nombreModulo, numero, nombre) {
-	this.id = id;
-	this.modulo = new Modulo(nombreModulo);
-	this.numero = numero;
+function Atributo (nombre) {
 	this.nombre = nombre;
 }
 

@@ -17,8 +17,26 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-		HttpSession session = ServletActionContext.getRequest().getSession(
+/*		HttpSession session = ServletActionContext.getRequest().getSession(
 				false);
+		Object loginObject = session.getAttribute("login");
+		boolean login = false;
+		if (loginObject != null) {
+			login = (Boolean) loginObject;
+			if (!login) {
+				return Action.LOGIN;
+			} else {
+				return invocation.invoke();
+			}
+		} else {
+			return Action.LOGIN;
+		}*/
+		
+		HttpSession session = ServletActionContext.getRequest().getSession(
+				true);
+		session.setAttribute("login", true);
+		session.setAttribute("correo", "test");
+
 		Object loginObject = session.getAttribute("login");
 		boolean login = false;
 		if (loginObject != null) {

@@ -25,7 +25,7 @@ import com.opensymphony.xwork2.ModelDriven;
 @ResultPath("/content/admin/attributes/")
 @Results({ @Result(name = ActionSupportECommerce.SUCCESS, type = "redirectAction", params = {
 		"actionName", "attributes" }) })
-public class AttributesCtrl extends ActionSupportECommerce implements
+public class UserCtrl extends ActionSupportECommerce implements
 		SessionAware, ModelDriven<Atributo> {
 
 	private static final long serialVersionUID = 1L;

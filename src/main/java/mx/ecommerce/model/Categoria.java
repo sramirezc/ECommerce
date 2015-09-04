@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,7 +52,7 @@ public class Categoria implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "categoria")	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)	
 	public Set<AtributoCategoria> getAtributos() {
 		return atributos;
 	}

@@ -88,10 +88,12 @@ public class GenericDAO {
 	@SuppressWarnings("unchecked")
 	public List<Object> findAll(Class<?> clazz) {
 		List<Object> objects = null;
-		
+		queryString = "from " + clazz.getName();
+
 		try {
 			session.beginTransaction();
-			objects = session.createCriteria(clazz).list();
+			queryObject = session.createQuery(queryString);
+			objects = queryObject.list();
 			session.getTransaction().commit();
 		} catch (HibernateException he) {
 			he.printStackTrace();

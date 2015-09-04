@@ -7,7 +7,9 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import mx.ecommerce.dao.AtributoDAO;
+import mx.ecommerce.dao.CategoriaDAO;
 import mx.ecommerce.model.Atributo;
+import mx.ecommerce.model.Categoria;
 
 import org.hibernate.HibernateException;
 
@@ -57,6 +59,27 @@ public class Validador {
 			} else
 				for (Atributo atributo : atributos) {
 					if (atributo.getId() != model.getId()) {
+						return true;
+					}
+				}
+
+		} catch (HibernateException he) {
+			he.printStackTrace();
+			throw new Exception();
+		}
+		return false;
+	}
+	
+	public static boolean isDuplicado(Categoria model) throws Exception {
+		List<Categoria> categorias = null;
+
+		try {
+			categorias = new CategoriaDAO().findByName(model.getNombre());
+			if (categorias != null && categorias.isEmpty()) {
+				return false;
+			} else
+				for (Categoria categoria : categorias) {
+					if (categoria.getId() != model.getId()) {
 						return true;
 					}
 				}

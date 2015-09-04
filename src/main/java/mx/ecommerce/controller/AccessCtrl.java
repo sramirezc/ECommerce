@@ -154,7 +154,6 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 	}
 	
 	public static String getMenu(String correo) {
-		System.out.println("Method " + correo);
 		if (UsuarioBs.isAdministrador(UsuarioBs.findById(correo))) {
 			return "adminMenu";
 		}
