@@ -176,6 +176,10 @@ public class CategoriesCtrl extends ActionSupportECommerce implements
 	public String destroy() throws Exception {
 		String resultado = null;
 		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAdministrador(usuario)) {
+				resultado = Action.LOGIN;
+			}
 			CategoriaBs.delete(model);
 			resultado = SUCCESS;
 			addActionMessage(getText("MSG5", new String[] { "La", "categoria",
@@ -230,11 +234,6 @@ public class CategoriesCtrl extends ActionSupportECommerce implements
 		this.idSel = idSel;
 		model = CategoriaBs.findById(idSel);
 
-	}
-
-	public void setIdSel(int idSel) throws Exception {
-		this.idSel = idSel;
-		model = CategoriaBs.findById(idSel);
 	}
 
 	public List<Categoria> getListCategorias() {

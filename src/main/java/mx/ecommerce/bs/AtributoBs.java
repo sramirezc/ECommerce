@@ -13,6 +13,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 
 public class AtributoBs {
+	
 	public static List<Atributo> findAll() {
 		return new AtributoDAO().findAll();
 	}

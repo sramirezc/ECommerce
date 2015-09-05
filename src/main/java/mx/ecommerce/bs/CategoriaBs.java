@@ -1,8 +1,11 @@
 package mx.ecommerce.bs;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import mx.ecommerce.dao.AtributoDAO;
 import mx.ecommerce.dao.CategoriaDAO;
+import mx.ecommerce.model.Atributo;
 import mx.ecommerce.model.Categoria;
 import mx.ecommerce.util.ECommerceException;
 import mx.ecommerce.util.ECommerceValidacionException;
@@ -65,6 +68,18 @@ public class CategoriaBs {
 		}
 		
 		return Categoria;
+	}
+	
+	public static Categoria findByName(String name) throws Exception {
+		List<Categoria> categorias = new ArrayList<Categoria>();
+		try {
+			categorias = new CategoriaDAO().findByName(name);
+		} catch (HibernateException he) {
+			he.printStackTrace();
+			throw new Exception();
+		}
+		
+		return categorias.get(0);
 	}
 
 
