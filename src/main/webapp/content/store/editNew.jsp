@@ -25,6 +25,8 @@
 	<p class="instrucciones">Ingrese la información solicitada.</p>
 	<s:form autocomplete="off" id="frmProducto" theme="simple"
 		action="%{#pageContext.request.contextPath}/store" onsubmit="prepararEnvio()" method="post">
+		<s:fielderror fieldName="formError" cssClass="error" theme="jquery" />
+		
 		<div class="formulario">
 			<div class="tituloFormulario">Información del Producto</div>
 			<div class="seccion">
@@ -55,6 +57,7 @@
 				</table>
 				<br/>
 				<div id = "atributos">
+				<s:fielderror fieldName="atributos" cssClass="error" theme="jquery" />
 				</div>
 			</table>
 			</div>
@@ -70,10 +73,11 @@
 			<input class="boton" type="button"
 				onclick="location.href='${urlGestionarProductos}'"
 				value="Cancelar" />
+				
 		</div>
 		
 				
-		<s:hidden id="jsonAtributos" name="jsonAtributos" value="%{jsonAtributos}" />
+		<s:hidden id="jsonValores" name="jsonValores" value="%{jsonValores}" />
 		<s:hidden id="jsonCategorias" name="jsonCategorias" value="%{jsonCategorias}" />
 		
 	</s:form>

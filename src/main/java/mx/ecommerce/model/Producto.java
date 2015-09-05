@@ -3,6 +3,7 @@ package mx.ecommerce.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,15 +26,13 @@ public class Producto implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nombre;
-	private float cantidad;
 	private Set<CategoriaProducto> categorias = new HashSet<CategoriaProducto>(0);
 
 	public Producto() {
 	}
 
-	public Producto(String nombre, int cantidad) {
+	public Producto(String nombre) {
 		this.nombre = nombre;
-		this.cantidad = cantidad;
 	}
 
 	@Id
@@ -56,16 +55,8 @@ public class Producto implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	@Column(name = "cantidad", nullable = false)
-	public float getCantidad() {
-		return this.cantidad;
-	}
-
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
-	}
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "producto")	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)	
 	public Set<CategoriaProducto> getCategorias() {
 		return categorias;
 	}

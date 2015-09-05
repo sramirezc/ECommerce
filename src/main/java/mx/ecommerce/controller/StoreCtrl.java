@@ -11,8 +11,10 @@ import mx.ecommerce.bs.UsuarioBs;
 import mx.ecommerce.model.Atributo;
 import mx.ecommerce.model.AtributoCategoria;
 import mx.ecommerce.model.Categoria;
+import mx.ecommerce.model.CategoriaProducto;
 import mx.ecommerce.model.Producto;
 import mx.ecommerce.model.Usuario;
+import mx.ecommerce.model.Valor;
 import mx.ecommerce.util.ActionSupportECommerce;
 import mx.ecommerce.util.ECommerceException;
 import mx.ecommerce.util.ECommerceValidacionException;
@@ -44,14 +46,12 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 	Integer idSel;
 	String nbCategoriaSel;
 	private List<Atributo> atributosCategoriaSel;
-	private String jsonAtributos;
+	private String jsonValores;
 	private String jsonCategorias;
 
-
 	private Producto model;
+	private List<Producto> listProductos;
 	private List<Categoria> listCategorias;
-
-	// private String jsonAtributosTabla;
 
 	@SuppressWarnings("unchecked")
 	public String index() throws Exception {
@@ -63,7 +63,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 				resultado = Action.LOGIN;
 			}
 			resultado = INDEX;
-			listCategorias = CategoriaBs.findAll();
+			listProductos = ProductoBs.findAll();
 
 			mensajes = (Collection<String>) SessionManager
 					.get("mensajesAccion");
@@ -109,8 +109,8 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			agregarAtributos();
 			ProductoBs.save(model);
 			resultado = SUCCESS;
-			addActionMessage(getText("MSG5", new String[] { "La", "categoria",
-					"registrada" }));
+			addActionMessage(getText("MSG5", new String[] { "El", "producto",
+					"registrado" }));
 
 			SessionManager.set(this.getActionMessages(), "mensajesAccion");
 		} catch (ECommerceValidacionException pve) {
@@ -126,38 +126,56 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		return resultado;
 	}
 
-	/*
-	 * public String edit() throws Exception { String resultado = null;
-	 * List<Atributo> atributosSeleccionados = new ArrayList<Atributo>(); try {
-	 * usuario = SessionManager.consultarUsuarioActivo(); if
-	 * (!UsuarioBs.isAlmacen(usuario)) { resultado = Action.LOGIN; }
-	 * 
-	 * listCategorias = CategoriaBs.findAll(); for (AtributoCategoria
-	 * atributoCategoria : model.getAtributos()) {
-	 * atributosSeleccionados.add(atributoCategoria.getAtributo()); }
-	 * jsonAtributosTabla = JsonUtil.mapListToJSON(atributosSeleccionados);
-	 * resultado = EDIT; } catch (ECommerceException pe) {
-	 * ErrorManager.agregaMensajeError(this, pe); resultado = index(); } catch
-	 * (Exception e) { ErrorManager.agregaMensajeError(this, e); resultado =
-	 * index(); }
-	 * 
-	 * return resultado;
-	 * 
-	 * }
-	 * 
-	 * public String update() throws Exception { String resultado = null; try {
-	 * usuario = SessionManager.consultarUsuarioActivo(); if
-	 * (!UsuarioBs.isAlmacen(usuario)) { resultado = Action.LOGIN; }
-	 * ProductoBs.update(model); resultado = SUCCESS;
-	 * addActionMessage(getText("MSG5", new String[] { "El", "producto",
-	 * "modificado" })); SessionManager.set(this.getActionMessages(),
-	 * "mensajesAccion"); } catch (ECommerceValidacionException pve) {
-	 * ErrorManager.agregaMensajeError(this, pve); resultado = edit(); } catch
-	 * (ECommerceException pe) { ErrorManager.agregaMensajeError(this, pe);
-	 * resultado = index(); } catch (Exception e) {
-	 * ErrorManager.agregaMensajeError(this, e); resultado = index(); } return
-	 * resultado; }
-	 */
+	public String edit() throws Exception {
+		String resultado = null;
+		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAlmacen(usuario)) {
+				resultado = Action.LOGIN;
+			}
+
+			listCategorias = CategoriaBs.findAll();
+			prepararVista();
+			resultado = EDIT;
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			ErrorManager.agregaMensajeError(this, e);
+			resultado = index();
+		}
+
+		return resultado;
+
+	}
+
+	public String update() throws Exception {
+		String resultado = null;
+		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAlmacen(usuario)) {
+				resultado = Action.LOGIN;
+			}
+			
+			agregarAtributos();
+			ProductoBs.update(model);
+			resultado = SUCCESS;
+			addActionMessage(getText("MSG5", new String[] { "El", "producto",
+					"modificado" }));
+			SessionManager.set(this.getActionMessages(), "mensajesAccion");
+		} catch (ECommerceValidacionException pve) {
+			ErrorManager.agregaMensajeError(this, pve);
+			resultado = edit();
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			ErrorManager.agregaMensajeError(this, e);
+			resultado = index();
+		}
+		return resultado;
+	}
+
 	public String destroy() throws Exception {
 		String resultado = null;
 		try {
@@ -193,22 +211,75 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		return "atributosCategoriaSel";
 	}
 
-	public void agregarAtributos() {
-		List<Categoria> categorias = new ArrayList<Categoria>();
-		List<Atributo> atributos = new ArrayList<Atributo>();
-		
-		atributos = JsonUtil.mapJSONToArrayList(jsonAtributos,
-				Atributo.class);
-		categorias = JsonUtil.mapJSONToArrayList(jsonCategorias,
+	public void agregarAtributos() throws Exception {
+		List<Categoria> categoriasVista = new ArrayList<Categoria>();
+		List<Valor> valoresVista = new ArrayList<Valor>();
+		Categoria categoriaAux = null;
+		CategoriaProducto categoriaProducto = null;
+
+		model.getCategorias().clear();
+
+		valoresVista = JsonUtil.mapJSONToArrayList(jsonValores, Valor.class);
+		categoriasVista = JsonUtil.mapJSONToArrayList(jsonCategorias,
 				Categoria.class);
+
+		for (Categoria categoriaVista : categoriasVista) {
+			categoriaAux = CategoriaBs.findByName(categoriaVista.getNombre());
+			categoriaProducto = new CategoriaProducto(categoriaAux, model);
+			for (AtributoCategoria atributoCategoria : categoriaAux
+					.getAtributos()) {
+				categoriaProducto.getValores().add(
+						new Valor(atributoCategoria, categoriaProducto,
+								findValor(valoresVista,
+										atributoCategoria.getAtributo())));
+			}
+
+			model.getCategorias().add(categoriaProducto);
+		}
+	}
+
+	public String findValor(List<Valor> valores, Atributo atributo) {
+		String valor = null;
+		for (Valor valori : valores) {
+			if (atributo.getNombre().equals(
+					valori.getAtributoCategoria().getAtributo().getNombre())) {
+				return valori.getValor();
+			}
+		}
+
+		return valor;
+	}
+
+	public void prepararVista() {
+		List<Valor> valores = new ArrayList<Valor>();
+		List<Categoria> categorias = new ArrayList<Categoria>();
+		Categoria categoriaAux = null;
+		Valor valorAux = null;
+		Atributo atributoAux = null;
+		AtributoCategoria atributoCategoriaAux = null;
+
 		
-		for (Categoria categoria : categorias) {
-			System.out.println("C " + categoria.getNombre());
+		for (CategoriaProducto categoriaProducto : model.getCategorias()) {
+			categoriaAux = new Categoria();
+			categoriaAux.setNombre(categoriaProducto.getCategoria().getNombre());
+			categorias.add(categoriaAux);
+			for (Valor valor : categoriaProducto.getValores()) {
+				valorAux = new Valor();
+				atributoAux = new Atributo();
+				atributoCategoriaAux = new AtributoCategoria();
+				atributoAux.setNombre(valor.getAtributoCategoria().getAtributo().getNombre());
+				atributoCategoriaAux.setAtributo(atributoAux);
+				valorAux.setValor(valor.getValor());
+				valorAux.setAtributoCategoria(atributoCategoriaAux);
+				valores.add(valorAux);
+			}
 		}
 		
-		for (Atributo atributo : atributos) {
-			System.out.println("A " + atributo.getNombre());
-		}
+		this.jsonCategorias = JsonUtil.mapListToJSON(categorias);
+		this.jsonValores = JsonUtil.mapListToJSON(valores);
+
+
+
 	}
 
 	public void setSession(Map<String, Object> session) {
@@ -237,16 +308,32 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 
 	}
 
+	public String getJsonValores() {
+		return jsonValores;
+	}
+
+	public void setJsonValores(String jsonValores) {
+		this.jsonValores = jsonValores;
+	}
+
+	public List<Producto> getListProductos() {
+		return listProductos;
+	}
+
+	public void setListProductos(List<Producto> listProductos) {
+		this.listProductos = listProductos;
+	}
+
+	public String getNbCategoriaSel() {
+		return nbCategoriaSel;
+	}
+
 	public List<Categoria> getListCategorias() {
 		return listCategorias;
 	}
 
 	public void setListCategorias(List<Categoria> listCategorias) {
 		this.listCategorias = listCategorias;
-	}
-
-	public String getNbCategoriaSel() {
-		return nbCategoriaSel;
 	}
 
 	public void setNbCategoriaSel(String nombreCategoriaSel) {
@@ -261,14 +348,6 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		this.atributosCategoriaSel = atributosCategoriaSel;
 	}
 
-	public String getJsonAtributos() {
-		return jsonAtributos;
-	}
-
-	public void setJsonAtributos(String jsonAtributos) {
-		this.jsonAtributos = jsonAtributos;
-	}
-
 	public String getJsonCategorias() {
 		return jsonCategorias;
 	}
@@ -277,5 +356,4 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		this.jsonCategorias = jsonCategorias;
 	}
 
-	
 }

@@ -2,6 +2,9 @@ package mx.ecommerce.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,7 +27,7 @@ public class CategoriaProducto implements java.io.Serializable {
 	private Integer id;
 	private Categoria categoria;
 	private Producto producto;
-	private Valor valor;
+	private Set<Valor> valores = new HashSet<Valor>(0);
 
 	public CategoriaProducto() {
 	}
@@ -65,13 +68,13 @@ public class CategoriaProducto implements java.io.Serializable {
 		this.producto = producto;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "categoriaProducto", cascade = CascadeType.ALL, orphanRemoval = true)	
-	public Valor getValor() {
-		return valor;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "categoriaProducto", cascade = CascadeType.ALL, orphanRemoval = true)	
+	public Set<Valor> getValores() {
+		return valores;
 	}
 
-	public void setValor(Valor valor) {
-		this.valor = valor;
+	public void setValores(Set<Valor> valores) {
+		this.valores = valores;
 	}
 	
 	

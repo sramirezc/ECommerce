@@ -6,6 +6,7 @@ import java.util.List;
 import mx.ecommerce.dao.ProductoDAO;
 import mx.ecommerce.model.CategoriaProducto;
 import mx.ecommerce.model.Producto;
+import mx.ecommerce.model.Valor;
 import mx.ecommerce.util.ECommerceException;
 import mx.ecommerce.util.ECommerceValidacionException;
 import mx.ecommerce.util.Validador;
@@ -23,8 +24,6 @@ public class ProductoBs {
 		try {
 			validar(model);
 			new ProductoDAO().save(model);
-
-		
 		} catch (HibernateException he) {
 			he.printStackTrace();
 			throw new Exception();
@@ -99,16 +98,18 @@ public class ProductoBs {
 					"El usuario ingreso un nombre muy largo.", "MSG6",
 					new String[] { "50", "caracteres" }, "model.nombre");
 		}
-		if (!model.getCategorias().isEmpty()) {
+		if (model.getCategorias().isEmpty()) {
 			throw new ECommerceValidacionException(
 					"El usuario no ingresó ninguna categoria.", "MSG10",
-					null, "model.nombre");
+					null, "formError");
 		} else {
 			for (CategoriaProducto categoriaProducto : model.getCategorias()) {
-				if (Validador.esNuloOVacio(categoriaProducto.getValor().getValor())) {
+				for (Valor valor : categoriaProducto.getValores()) {
+				if (Validador.esNuloOVacio(valor.getValor())) {
 					throw new ECommerceValidacionException(
-							"El usuario no ingresó el valor del atributo.", "MSG2",
-							null, categoriaProducto.getProducto().getNombre());
+							"El usuario no ingresó el valor del atributo.", "MSG11",
+							null, "atributos");
+				}
 				}
 			}
 		}
