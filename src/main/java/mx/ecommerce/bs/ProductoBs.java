@@ -98,6 +98,20 @@ public class ProductoBs {
 					"El usuario ingreso un nombre muy largo.", "MSG6",
 					new String[] { "50", "caracteres" }, "model.nombre");
 		}
+		
+		if (Validador.esNulo(model.getCantidad())) {
+			throw new ECommerceValidacionException(
+					"El usuario no ingresó la cantidad del producto.", "MSG2",
+					null, "model.cantidad");
+		}
+		
+		if (Validador.esNulo(model.getPrecio())) {
+			throw new ECommerceValidacionException(
+					"El usuario no ingresó el precio del producto.", "MSG2",
+					null, "model.precio");
+		}
+		
+		
 		if (model.getCategorias().isEmpty()) {
 			throw new ECommerceValidacionException(
 					"El usuario no ingresó ninguna categoria.", "MSG10",

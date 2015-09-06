@@ -100,15 +100,20 @@ public class Validador {
 
 		try {
 			usuarios = new UsuarioDAO().findByCorreo(model.getCorreo());
-			if (usuarios != null && !usuarios.isEmpty()) {
-				return true;
-			} else
+			if (usuarios != null && usuarios.isEmpty()) {
 				return false;
+			} else
+				for (Usuario usuario : usuarios) {
+					if (usuario.getId() != model.getId()) {
+						return true;
+					}
+				}
 
 		} catch (HibernateException he) {
 			he.printStackTrace();
 			throw new Exception();
 		}
+		return false;
 	}
 	
 	public static boolean isDuplicado(Producto model) throws Exception {
@@ -116,15 +121,21 @@ public class Validador {
 
 		try {
 			productos = new ProductoDAO().findByName(model.getNombre());
-			if (productos != null && !productos.isEmpty()) {
-				return true;
+			if (productos != null && productos.isEmpty()) {
+					return false;
+				
 			} else
-				return false;
+				for (Producto producto : productos) {
+					if (producto.getId() != model.getId()) {
+						return true;
+					}
+				}
 
 		} catch (HibernateException he) {
 			he.printStackTrace();
 			throw new Exception();
 		}
+		return false;
 	}
 
 }

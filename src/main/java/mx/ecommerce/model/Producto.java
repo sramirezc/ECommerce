@@ -26,13 +26,17 @@ public class Producto implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nombre;
+	private Float cantidad;
+	private Float precio;
 	private Set<CategoriaProducto> categorias = new HashSet<CategoriaProducto>(0);
 
 	public Producto() {
 	}
 
-	public Producto(String nombre) {
+	public Producto(String nombre, Float cantidad, Float precio) {
 		this.nombre = nombre;
+		this.cantidad = cantidad;
+		this.precio = precio;
 	}
 
 	@Id
@@ -64,4 +68,24 @@ public class Producto implements java.io.Serializable {
 	public void setCategorias(Set<CategoriaProducto> categorias) {
 		this.categorias = categorias;
 	}
+	
+	@Column(name = "cantidad", unique = false, nullable = false)
+	public Float getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Float cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	@Column(name = "precio", unique = false, nullable = false)
+	public Float getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(Float precio) {
+		this.precio = precio;
+	}
+	
+	
 }

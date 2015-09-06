@@ -386,7 +386,7 @@ textarea[readonly=""] {
 }
 
 .ui-dialog-titlebar-close {
-  visibility: hidden;
+  visibility: none;
 }
 .oculto {
 	display: none;

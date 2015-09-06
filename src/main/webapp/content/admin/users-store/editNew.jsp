@@ -51,7 +51,7 @@
 				</tr>
 				<tr>
 					<td class="label obligatorio"><s:text name="labelCorreo" /></td>
-					<td><s:textfield name="model.correo" maxlength="20"
+					<td><s:textfield name="model.correo" maxlength="50"
 							cssErrorClass="input-error" cssClass="inputFormulario ui-widget" />
 						<s:fielderror fieldName ="model.correo" cssClass="error"
 							theme="jquery" /></td>

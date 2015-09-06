@@ -56,7 +56,7 @@ public class Usuario implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "correo", unique = true, nullable = false, length = 20)
+	@Column(name = "correo", unique = true, nullable = false, length = 50)
 	public String getCorreo() {
 		return this.correo;
 	}

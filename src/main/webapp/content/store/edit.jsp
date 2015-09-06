@@ -6,7 +6,7 @@
 		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Registrar Producto</title>
+<title>Modificar Producto</title>
 <![CDATA[
 	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/resources/scripts/constructores.js"></script>
 	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/resources/scripts/validaciones.js"></script>
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-	<h1>Registrar Producto</h1>
+	<h1>Modificar Producto</h1>
 
 	<s:actionmessage theme="jquery" />
 	<s:actionerror theme="jquery" />
@@ -38,6 +38,19 @@
 						<s:fielderror fieldName ="model.nombre" cssClass="error"
 							theme="jquery" /></td>
 				</tr>
+				<tr>
+					<td class="label obligatorio"><s:text name="labelCantidad" /></td>
+					<td><s:textfield name="model.cantidad" cssErrorClass="input-error" cssClass="inputFormulario ui-widget" maxlegth = "10"/>
+						<s:fielderror fieldName ="model.cantidad" cssClass="error"
+							theme="jquery" /></td>
+				</tr>
+				<tr>
+					<td class="label obligatorio"><s:text name="labelPrecio" /></td>
+					<td><s:textfield name="model.precio" cssErrorClass="input-error" cssClass="inputFormulario ui-widget" maxlegth = "10" />
+						<s:fielderror fieldName ="model.precio" cssClass="error"
+							theme="jquery" /></td>
+				</tr>
+				
 			<table id="tablaCategoria" class="tablaGestion" cellspacing="0"
 					width="100%">
 					<thead>

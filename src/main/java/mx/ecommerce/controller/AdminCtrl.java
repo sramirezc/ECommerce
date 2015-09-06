@@ -33,6 +33,7 @@ public class AdminCtrl extends ActionSupportECommerce implements SessionAware {
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = INDEX;
 			

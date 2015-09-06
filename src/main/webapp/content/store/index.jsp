@@ -67,13 +67,17 @@
 	<div class = "seccion">
 		<table id="gestion" class="tablaGestion" cellspacing="0" width="100%">
 			<thead>
-				<th style="width: 80%;"><s:text name="colProducto"/></th>
+				<th style="width: 60%;"><s:text name="colProducto"/></th>
+				<th style="width: 10%;"><s:text name="colDisponible"/></th>
+				<th style="width: 10%;"><s:text name="colPrecio"/></th>
 				<th style="width: 20%;"><s:text name="colAcciones"/></th>
 			</thead>
 			<tbody>
 			<s:iterator value="listProductos" var="producto">
 				<tr>
 					<td><s:property value="%{#producto.nombre}"/></td>
+					<td align="right"><s:property value="%{#producto.cantidad}"/></td>
+					<td align="right"><s:property value="%{#producto.precio}"/></td>
 
 					
 					<td align="center">

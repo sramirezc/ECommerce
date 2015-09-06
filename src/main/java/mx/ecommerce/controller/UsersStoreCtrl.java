@@ -46,6 +46,7 @@ public class UsersStoreCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = INDEX;
 			listUsuariosAlmacen = UsuarioBs.findByPerfil(PerfilBs.PerfilEnum.ALMACEN);
@@ -70,6 +71,7 @@ public class UsersStoreCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = EDITNEW;
 		} catch (ECommerceException pe) {
@@ -89,6 +91,7 @@ public class UsersStoreCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			Perfil perfil =  PerfilBs.findById(PerfilBs.getId(PerfilEnum.ALMACEN));
 			model.setPerfil(perfil);
@@ -117,6 +120,7 @@ public class UsersStoreCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = EDIT;
 		} catch (ECommerceException pe) {
@@ -137,6 +141,7 @@ public class UsersStoreCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			UsuarioBs.update(model);
 			resultado = SUCCESS;
@@ -159,6 +164,11 @@ public class UsersStoreCtrl extends ActionSupportECommerce implements
 	public String destroy() throws Exception {
 		String resultado = null;
 		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAdministrador(usuario)) {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
 			UsuarioBs.delete(model);
 			resultado = SUCCESS;
 			addActionMessage(getText("MSG5", new String[] { "El", "usuario",

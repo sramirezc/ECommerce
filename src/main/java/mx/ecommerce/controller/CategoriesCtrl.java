@@ -55,6 +55,7 @@ public class CategoriesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = INDEX;
 			listCategorias = CategoriaBs.findAll();
@@ -79,6 +80,8 @@ public class CategoriesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
+
 			}
 			listAtributos = AtributoBs.findAll();
 			resultado = EDITNEW;
@@ -99,6 +102,7 @@ public class CategoriesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			agregarAtributos();
 			CategoriaBs.save(model);
@@ -127,6 +131,7 @@ public class CategoriesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			
 			listAtributos = AtributoBs.findAll();
@@ -153,6 +158,7 @@ public class CategoriesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			agregarAtributos();
 			CategoriaBs.update(model);
@@ -179,6 +185,7 @@ public class CategoriesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			CategoriaBs.delete(model);
 			resultado = SUCCESS;

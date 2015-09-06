@@ -45,6 +45,7 @@ public class AttributesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = INDEX;
 			listAtributos = AtributoBs.findAll();
@@ -69,6 +70,7 @@ public class AttributesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = EDITNEW;
 		} catch (ECommerceException pe) {
@@ -88,6 +90,7 @@ public class AttributesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			AtributoBs.save(model);
 			resultado = SUCCESS;
@@ -114,6 +117,7 @@ public class AttributesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = EDIT;
 		} catch (ECommerceException pe) {
@@ -134,6 +138,7 @@ public class AttributesCtrl extends ActionSupportECommerce implements
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			AtributoBs.update(model);
 			resultado = SUCCESS;
@@ -156,6 +161,10 @@ public class AttributesCtrl extends ActionSupportECommerce implements
 	public String destroy() throws Exception {
 		String resultado = null;
 		try {
+			if (!UsuarioBs.isAdministrador(usuario)) {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
 			AtributoBs.delete(model);
 			resultado = SUCCESS;
 			addActionMessage(getText("MSG5", new String[] { "El", "atributo",

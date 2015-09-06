@@ -6,17 +6,17 @@
 		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Modificar Usuario del Almacén</title>
+<title>Registrar Cliente</title>
 <![CDATA[
 	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/resources/scripts/constructores.js"></script>
 	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/resources/scripts/validaciones.js"></script>
-	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/content/admin/users-store/js/edit.js"></script>	
+	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/content/customer/js/editNew.js"></script>	
 ]]>
 
 </head>
 <body>
 
-	<h1>Modificar Usuario del Almacén</h1>
+	<h1>Registrar Cliente</h1>
 
 	<s:actionmessage theme="jquery" />
 	<s:actionerror theme="jquery" />
@@ -24,7 +24,7 @@
 
 	<p class="instrucciones">Ingrese la información solicitada.</p>
 	<s:form autocomplete="off" id="frmUsuario" theme="simple"
-		action="%{#pageContext.request.contextPath}/users-store/%{idSel}" method="post">
+		action="%{#pageContext.request.contextPath}/customer" method="post">
 		<div class="formulario">
 			<div class="tituloFormulario">Información del Usuario</div>
 			<table class="seccion">
@@ -70,15 +70,13 @@
 		<div align="center">
 			<s:submit class="boton" value="Aceptar" />
 
-			<s:url var="urlGestionarPersonal"
-				value="%{#pageContext.request.contextPath}/users-store">
+			<s:url var="urlLogin"
+				value="%{#pageContext.request.contextPath}/access">
 			</s:url>
 			<input class="boton" type="button"
-				onclick="location.href='${urlGestionarPersonal}'"
+				onclick="location.href='${urlLogin}'"
 				value="Cancelar" />
 		</div>
-				<s:hidden name="_method" value="put" />
-		
 	</s:form>
 </body>
 	</html>

@@ -147,7 +147,7 @@ public class UsuarioBs {
 					"El usuario ingresó un correo inválido.", "MSG9",
 					null, "model.correo");
 		}
-		if (Validador.validaLongitudMaxima(model.getCorreo(), 20)) {
+		if (Validador.validaLongitudMaxima(model.getCorreo(), 50)) {
 			throw new ECommerceValidacionException(
 					"El usuario ingreso un correo muy largo.", "MSG6",
 					new String[] { "20", "caracteres" }, "model.correo");
@@ -157,7 +157,7 @@ public class UsuarioBs {
 					"El usuario no ingresó el password.", "MSG2",
 					null, "model.password");
 		}
-		if (Validador.validaLongitudMaxima(model.getCorreo(), 20)) {
+		if (Validador.validaLongitudMaxima(model.getPassword(), 20)) {
 			throw new ECommerceValidacionException(
 					"El usuario ingreso un password muy largo.", "MSG6",
 					new String[] { "20", "caracteres" }, "model.password");

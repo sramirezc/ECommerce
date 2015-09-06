@@ -24,7 +24,7 @@
 
 				<tr>
 					<td class="label obligatorio"><s:text name="labelCorreo" /></td>
-					<td><s:textfield name="userName" maxlength="45"
+					<td><s:textfield name="userName" maxlength="50"
 							cssErrorClass="input-error" cssClass="inputFormulario ui-widget" />
 						<s:fielderror fieldName="userName" cssClass="error" theme="jquery" /></td>
 				</tr>
@@ -37,8 +37,12 @@
 			</table>
 			<div align="right">
 				<a class="link"
-					href="${pageContext.request.contextPath}/access!recover">Recuperar
-					contraseña</a>
+					href="${pageContext.request.contextPath}/access!recover">Recuperar contraseña</a>
+
+			</div>
+			<div align="right">
+				<a class="link"  formmethod="get"
+					href="${pageContext.request.contextPath}/customer/new">Registrarse</a>
 
 			</div>
 

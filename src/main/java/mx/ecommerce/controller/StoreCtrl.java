@@ -65,6 +65,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			resultado = INDEX;
 			listProductos = ProductoBs.findAll();
@@ -90,6 +91,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			listCategorias = CategoriaBs.findAll();
 			resultado = EDITNEW;
@@ -110,6 +112,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			agregarAtributos();
 			ProductoBs.save(model);
@@ -137,6 +140,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 
 			listCategorias = CategoriaBs.findAll();
@@ -160,6 +164,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			
 			agregarAtributos();
@@ -187,6 +192,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
 				resultado = Action.LOGIN;
+				return resultado;
 			}
 			ProductoBs.delete(model);
 			resultado = SUCCESS;
@@ -223,6 +229,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		Set<Producto> oldProductos = new HashSet<Producto>();
 		Set<Producto> newProductos = new HashSet<Producto>();
 		listProductos = new ArrayList<Producto>();
+		boolean isFirst = true;
 		try {
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
@@ -231,10 +238,9 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			resultado = INDEX;
 			listCategorias = CategoriaBs.findAll();
 			listProductos.clear();
-
+			searchByCategoria:
 			for (Categoria categoria : JsonUtil.mapJSONToArrayList(jsonCategoriasSel, Categoria.class)) {
 				newProductos.clear();
-				System.out.println(categoria.getNombre());
 					for (CategoriaProducto categoriaProducto : CategoriaBs.findByName(categoria.getNombre()).getProductos()) {
 						if (searchProducto != null && searchProducto != "") {
 							if (categoriaProducto.getProducto().getNombre().contains(searchProducto)) {
@@ -245,10 +251,14 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 						}
 					}
 					
-					if (oldProductos.isEmpty()) {
+					if (isFirst) {
 						oldProductos.addAll(newProductos);
+						isFirst = false;
 					} else {
 						oldProductos = intersect(oldProductos, newProductos);
+						if (oldProductos.isEmpty()) {
+							break searchByCategoria;
+						}
 					}				
 			}
 			
@@ -422,12 +432,10 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		this.jsonCategorias = jsonCategorias;
 	}
 
-	
 	public String getSearchProducto() {
 		return searchProducto;
 	}
 
-	
 	public void setSearchProducto(String searchProducto) {
 		this.searchProducto = searchProducto;
 	}
@@ -439,12 +447,10 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 	public void setJsonCategoriasSel(String jsonCategoriasSel) {
 		this.jsonCategoriasSel = jsonCategoriasSel;
 	}
-
 	
 	public List<Categoria> getListCategorias() {
 		return listCategorias;
 	}
-
 	
 	public void setListCategorias(List<Categoria> listCategorias) {
 		this.listCategorias = listCategorias;
