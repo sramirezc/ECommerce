@@ -2,8 +2,10 @@ package mx.ecommerce.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import mx.ecommerce.bs.CategoriaBs;
 import mx.ecommerce.bs.ProductoBs;
@@ -48,6 +50,8 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 	private List<Atributo> atributosCategoriaSel;
 	private String jsonValores;
 	private String jsonCategorias;
+	private String jsonCategoriasSel;
+	private String searchProducto;
 
 	private Producto model;
 	private List<Producto> listProductos;
@@ -64,6 +68,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			}
 			resultado = INDEX;
 			listProductos = ProductoBs.findAll();
+			listCategorias = CategoriaBs.findAll();
 
 			mensajes = (Collection<String>) SessionManager
 					.get("mensajesAccion");
@@ -179,6 +184,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 	public String destroy() throws Exception {
 		String resultado = null;
 		try {
+			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
 				resultado = Action.LOGIN;
 			}
@@ -211,6 +217,60 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		return "atributosCategoriaSel";
 	}
 
+	@SuppressWarnings("unchecked")
+	public String search() throws Exception {
+		Collection<String> mensajes;
+		Set<Producto> oldProductos = new HashSet<Producto>();
+		Set<Producto> newProductos = new HashSet<Producto>();
+		listProductos = new ArrayList<Producto>();
+		try {
+			usuario = SessionManager.consultarUsuarioActivo();
+			if (!UsuarioBs.isAlmacen(usuario)) {
+				resultado = Action.LOGIN;
+			}
+			resultado = INDEX;
+			listCategorias = CategoriaBs.findAll();
+			listProductos.clear();
+
+			for (Categoria categoria : JsonUtil.mapJSONToArrayList(jsonCategoriasSel, Categoria.class)) {
+				newProductos.clear();
+				System.out.println(categoria.getNombre());
+					for (CategoriaProducto categoriaProducto : CategoriaBs.findByName(categoria.getNombre()).getProductos()) {
+						if (searchProducto != null && searchProducto != "") {
+							if (categoriaProducto.getProducto().getNombre().contains(searchProducto)) {
+								newProductos.add(categoriaProducto.getProducto());
+							}
+						} else {
+							newProductos.add(categoriaProducto.getProducto());
+						}
+					}
+					
+					if (oldProductos.isEmpty()) {
+						oldProductos.addAll(newProductos);
+					} else {
+						oldProductos = intersect(oldProductos, newProductos);
+					}				
+			}
+			
+			if (JsonUtil.mapJSONToArrayList(jsonCategoriasSel, Categoria.class).isEmpty()) {
+				listProductos =  ProductoBs.findAll();
+			} else {
+				listProductos.addAll(oldProductos);
+			}
+			mensajes = (Collection<String>) SessionManager
+					.get("mensajesAccion");
+			this.setActionMessages(mensajes);
+			SessionManager.delete("mensajesAccion");
+
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = Action.LOGIN;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}	
+	
 	public void agregarAtributos() throws Exception {
 		List<Categoria> categoriasVista = new ArrayList<Categoria>();
 		List<Valor> valoresVista = new ArrayList<Valor>();
@@ -282,6 +342,19 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 
 	}
 
+	public Set<Producto> intersect(Set<Producto> oldSet, Set<Producto> newSet) {
+		Set<Producto> productos = new HashSet<Producto>();
+		for (Producto oldProducto : oldSet) {
+			for (Producto newProducto : newSet) {
+				if (oldProducto.getNombre().equals(newProducto.getNombre())) {
+					productos.add(oldProducto);
+				}
+			}
+		}
+		
+		return productos;
+	}
+
 	public void setSession(Map<String, Object> session) {
 		this.userSession = session;
 	}
@@ -304,7 +377,8 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 
 	public void setIdSel(Integer idSel) throws Exception {
 		this.idSel = idSel;
-		model = ProductoBs.findById(idSel);
+		if (idSel != null)
+			model = ProductoBs.findById(idSel);
 
 	}
 
@@ -328,14 +402,6 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		return nbCategoriaSel;
 	}
 
-	public List<Categoria> getListCategorias() {
-		return listCategorias;
-	}
-
-	public void setListCategorias(List<Categoria> listCategorias) {
-		this.listCategorias = listCategorias;
-	}
-
 	public void setNbCategoriaSel(String nombreCategoriaSel) {
 		this.nbCategoriaSel = nombreCategoriaSel;
 	}
@@ -356,4 +422,36 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		this.jsonCategorias = jsonCategorias;
 	}
 
+	
+	public String getSearchProducto() {
+		return searchProducto;
+	}
+
+	
+	public void setSearchProducto(String searchProducto) {
+		this.searchProducto = searchProducto;
+	}
+
+	public String getJsonCategoriasSel() {
+		return jsonCategoriasSel;
+	}
+
+	public void setJsonCategoriasSel(String jsonCategoriasSel) {
+		this.jsonCategoriasSel = jsonCategoriasSel;
+	}
+
+	
+	public List<Categoria> getListCategorias() {
+		return listCategorias;
+	}
+
+	
+	public void setListCategorias(List<Categoria> listCategorias) {
+		this.listCategorias = listCategorias;
+	}
+	
+
+	
+
+	
 }

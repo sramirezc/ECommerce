@@ -7,6 +7,7 @@
 <head>
 <title>Productos</title>
 <![CDATA[
+	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/resources/scripts/constructores.js"></script>
 	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/content/store/js/index.js"></script>
 ]]>
 </head>
@@ -17,8 +18,53 @@
 	<s:actionerror theme="jquery"/>
 	
 	<br/>
+	<p class="instrucciones">Ingrese la siguiente información para buscar productos. Si no ingresa ningún campo se mostrarán todos los productos registrados</p>
+	<div class="formulario">
+	<s:form autocomplete="off" theme="simple"
+		action="%{pageContext.request.contextPath}/store!search" onsubmit="prepararEnvio()">
+			<div class="tituloFormulario">Buscar productos</div>
+			<div class = "seccion">
+			<table>
+				<tr>
+					<td class="label obligatorio"><s:text name="labelNombre" /></td>
+					<td><s:textfield name="searchProducto" maxlength="200"
+							cssErrorClass="input-error" cssClass="inputFormulario ui-widget" />
+						<s:fielderror fieldName="searchProducto" cssClass="error" theme="jquery" /></td>
+				</tr>
+				
+				<table id="tablaFiltroProducto" class="tablaGestion" cellspacing="0"
+					width="100%">
+					<thead>
+						<th style="width: 80%;"><s:text name="colCategoria" /></th>
+						<th style="width: 20%;"><s:text name="colSeleccione" /></th>
+					</thead>
+					<tbody>
+						<s:iterator value="listCategorias" var="categoria">
+							<tr>
+								<td><s:property value="%{#categoria.nombre}" /></td>
+								<td align="center">
+									<input id="checkbox-${categoria.nombre}" type ="checkbox"/>
+								</td>
+							</tr>
+						</s:iterator>
+					</tbody>
+				</table>
+			</table>
+		</div>
+			<div align="center">
+			<s:submit class="boton" value="Buscar" />
+			
+		</div>
+		<br/>
+		<br />
+
+			<s:hidden id="jsonCategoriasSel" name="jsonCategoriasSel"
+			value="%{jsonCategoriasSel}" />
+	</s:form>
+		
 	<s:form autocomplete="off" theme="simple" onsubmit="return false;">
-	<div class="form">
+	<div class="tituloFormulario">Resultados</div>
+	<div class = "seccion">
 		<table id="gestion" class="tablaGestion" cellspacing="0" width="100%">
 			<thead>
 				<th style="width: 80%;"><s:text name="colProducto"/></th>
@@ -50,8 +96,7 @@
 			</s:iterator>
 			</tbody>
 		</table>
-		
-	</div>
+		</div>
 	<br />
 	<br />
 	<div align="center">
@@ -61,6 +106,7 @@
 		</button>
 	</div>
 	</s:form>
+	</div>
 </body>
 </html>
 </jsp:root>

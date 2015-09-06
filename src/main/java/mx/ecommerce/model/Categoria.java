@@ -23,6 +23,7 @@ public class Categoria implements java.io.Serializable {
 	private Integer id;
 	private String nombre;
 	private Set<AtributoCategoria> atributos = new HashSet<AtributoCategoria>(0);
+	private Set<CategoriaProducto> productos = new HashSet<CategoriaProducto>(0);
 
 
 	public Categoria() {
@@ -60,7 +61,16 @@ public class Categoria implements java.io.Serializable {
 	public void setAtributos(Set<AtributoCategoria> atributos) {
 		this.atributos = atributos;
 	}
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "categoria")	
+	public Set<CategoriaProducto> getProductos() {
+		return productos;
+	}
+
+	public void setProductos(Set<CategoriaProducto> productos) {
+		this.productos = productos;
+	}
 	
-	
+
 
 }

@@ -64,6 +64,4 @@ public class Producto implements java.io.Serializable {
 	public void setCategorias(Set<CategoriaProducto> categorias) {
 		this.categorias = categorias;
 	}
-
-	
 }

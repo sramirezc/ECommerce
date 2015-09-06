@@ -16,8 +16,6 @@
 	href="${pageContext.request.contextPath}/resources/css/estilo.css" />
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/DataTables-1.10.7/media/css/jquery.dataTables.css" />
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/jquery.atwho.css" />
 <s:url id="urlRutaContexto" includeParams="none"
 	value="%{pageContext.request.contextPath}/resources/template/themes"
 	includeContext="true" />
