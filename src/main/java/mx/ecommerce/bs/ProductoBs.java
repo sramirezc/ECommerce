@@ -77,6 +77,10 @@ public class ProductoBs {
 			throw new Exception();
 		}
 		
+		if (productos == null || productos.isEmpty()) {
+			throw new ECommerceValidacionException("Producto no encontrado", "MSG12", new String []{"Producto", "encontrado"});
+		}
+		
 		return productos.get(0);
 	}
 

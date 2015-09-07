@@ -76,7 +76,9 @@ public class AtributoBs {
 			he.printStackTrace();
 			throw new Exception();
 		}
-		
+		if (atributos == null || atributos.isEmpty()) {
+			throw new ECommerceValidacionException("Atributo no encontrado", "MSG12", new String []{"Atributo", "encontrado"});
+		}
 		return atributos.get(0);
 	}
 

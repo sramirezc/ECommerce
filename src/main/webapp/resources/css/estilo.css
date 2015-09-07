@@ -48,9 +48,9 @@ a {
 	position: absolute;
 	top: 40px;
 	/*left: 25%;*/
-	left: 12%;
+	left: 15%;
 	padding: 30px;
-	width: 70%;
+	width: 60%;
 	heigth: 100%;
 	z-index: 96;
 	visibility: hidden;
@@ -163,7 +163,18 @@ p.main {
 	color: #4d4d4d;
 	font-size: 15px;
 	width: 100%;
-	background-color: #bfbfbf;
+	background-color: #31b5ee;
+	min-height: 16px;
+}
+
+.tituloFormulario2 {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	color: white;
+	font-size: 20;
+	width: 100%;
+	background-color: #31b5ee;
 	min-height: 16px;
 }
 
@@ -323,7 +334,7 @@ a.menuCUSel:hover {
 }
 
 .inputFormulario {
-	min-width: 400px;
+	min-width: 200px;
 }
 
 textarea { 

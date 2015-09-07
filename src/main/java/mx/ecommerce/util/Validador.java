@@ -138,4 +138,12 @@ public class Validador {
 		return false;
 	}
 
+	public static boolean isInteger(String cantProductoSel) {
+		try {
+			Integer.parseInt(cantProductoSel);
+		} catch(Exception e) {
+			return false;
+		}
+		return true;
+	}
 }

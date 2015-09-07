@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -54,7 +55,7 @@ public class Compra implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Usuariocorreo", referencedColumnName = "correo")	
+    @JoinColumn(name = "Usuarioid", referencedColumnName = "id")	
 	public Usuario getUsuario() {
 		return this.usuario;
 	}
@@ -83,7 +84,7 @@ public class Compra implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "compra")	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)	
 	public Set<CompraProducto> getProductos() {
 		return productos;
 	}

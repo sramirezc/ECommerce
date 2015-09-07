@@ -72,7 +72,9 @@ public class AccessBs {
 		if (usuarios == null || usuarios.isEmpty()) {
 			throw new ECommerceValidacionException("Colaborador no encontrado", "MSG4");
 		}
+
 		Correo.enviarCorreo(usuarios.get(0), 1);
+		
 		
 	}
 	

@@ -14,3 +14,10 @@ function Categoria (nombre) {
 function AtributoCategoria (nbAtributo) {
 	this.atributo = new Atributo(nbAtributo);
 }
+
+function Producto (nombre, cantidad, precio) {
+	this.nombre = nombre;
+	this.cantidad = cantidad;
+	this.precio = precio;
+}
+

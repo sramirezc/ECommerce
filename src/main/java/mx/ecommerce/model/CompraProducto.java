@@ -22,13 +22,13 @@ public class CompraProducto implements java.io.Serializable {
 	private Integer id;
 	private Compra compra;
 	private Producto producto;
-	private Float cantidad;
+	private Integer cantidad;
 
 
 	public CompraProducto() {
 	}
 
-	public CompraProducto(Compra compra, Producto producto, Float cantidad) {
+	public CompraProducto(Compra compra, Producto producto, Integer cantidad) {
 		this.compra = compra;
 		this.producto = producto;
 		this.cantidad = cantidad;
@@ -66,11 +66,11 @@ public class CompraProducto implements java.io.Serializable {
 	}
 
 	@Column(name = "cantidad", unique = false, nullable = false)
-	public Float getCantidad() {
+	public Integer getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(Float cantidad) {
+	public void setCantidad(Integer cantidad) {
 		this.cantidad = cantidad;
 	}
 	

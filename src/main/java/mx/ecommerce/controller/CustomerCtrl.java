@@ -8,15 +8,20 @@ import java.util.Map;
 import java.util.Set;
 
 import mx.ecommerce.bs.CategoriaBs;
+import mx.ecommerce.bs.CompraBs;
+import mx.ecommerce.bs.CompraBs.EstadoEnum;
 import mx.ecommerce.bs.PerfilBs;
-import mx.ecommerce.bs.ProductoBs;
 import mx.ecommerce.bs.PerfilBs.PerfilEnum;
+import mx.ecommerce.bs.ProductoBs;
 import mx.ecommerce.bs.UsuarioBs;
 import mx.ecommerce.model.Categoria;
 import mx.ecommerce.model.CategoriaProducto;
+import mx.ecommerce.model.Compra;
+import mx.ecommerce.model.CompraProducto;
+import mx.ecommerce.model.Perfil;
 import mx.ecommerce.model.Producto;
 import mx.ecommerce.model.Usuario;
-import mx.ecommerce.model.Perfil;
+import mx.ecommerce.model.Valor;
 import mx.ecommerce.util.ActionSupportECommerce;
 import mx.ecommerce.util.ECommerceException;
 import mx.ecommerce.util.ECommerceValidacionException;
@@ -38,7 +43,13 @@ import com.opensymphony.xwork2.ModelDriven;
 @Results({
 		@Result(name = ActionSupportECommerce.SUCCESS, type = "redirectAction", params = {
 				"actionName", "customer" }),
-		@Result(name = "buy", type = "dispatcher", location = "buy.jsp") })
+		@Result(name = "buy", type = "dispatcher", location = "buy.jsp"),
+		@Result(name = "history", type = "dispatcher", location = "history.jsp"),
+		@Result(name = "detail", type = "json", params = {
+				"root", "detailSearch" }),
+		@Result(name = "added", type = "json", params = {
+				"root", "listCompraProducto" })
+		})
 public class CustomerCtrl extends ActionSupportECommerce implements
 		SessionAware, ModelDriven<Usuario> {
 
@@ -53,17 +64,16 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 	private String jsonCategorias;
 	private String jsonCategoriasSel;
 	private String searchProducto;
-
+	private List<Valor> detailSearch;
+	
+	private String nbProductoSel;
+	private String cantProductoSel;
+	private List<CompraProducto> listCompraProducto;
+	
 	private List<Producto> listProductos;
 	private List<Categoria> listCategorias;
+	private List<Compra> listCompras;
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
 
 	@SuppressWarnings("unchecked")
 	public String index() throws Exception {
@@ -196,6 +206,8 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 
 	public String buy() throws Exception {
 		String resultado = null;
+		Compra compra = null;
+		listCompraProducto = new ArrayList<CompraProducto>();
 		try {
 			if (SessionManager.isLogged()) {
 				usuario = SessionManager.consultarUsuarioActivo();
@@ -207,9 +219,14 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 				resultado = Action.LOGIN;
 				return resultado;
 			}
+			
 			resultado = "buy";
 			listProductos = ProductoBs.findAll();
 			listCategorias = CategoriaBs.findAll();
+			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
+			if (compra != null) {
+				listCompraProducto.addAll(compra.getProductos());
+			}
 		} catch (ECommerceValidacionException pve) {
 			ErrorManager.agregaMensajeError(this, pve);
 			resultado = buy();
@@ -224,13 +241,85 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 	}
 
 	@SuppressWarnings("unchecked")
+	public String showDetails() throws Exception {
+		Collection<String> mensajes;
+		Compra compra = null;
+		listCompraProducto = new ArrayList<CompraProducto>();
+		detailSearch = new ArrayList<Valor>();
+		try {
+			if (SessionManager.isLogged()) {
+				usuario = SessionManager.consultarUsuarioActivo();
+				if (!UsuarioBs.isCliente(usuario)) {
+					resultado = Action.LOGIN;
+					return resultado;
+				}
+			} else {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
+			Producto producto = ProductoBs.findByName(searchProducto);
+			for (CategoriaProducto categoriaProducto : producto.getCategorias()) {
+				detailSearch.addAll(categoriaProducto.getValores());
+			}
+			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
+			if (compra != null) {
+				listCompraProducto.addAll(compra.getProductos());
+			}			resultado = "detail";
+			mensajes = (Collection<String>) SessionManager
+					.get("mensajesAccion");
+			this.setActionMessages(mensajes);
+			SessionManager.delete("mensajesAccion");
+
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String history() throws Exception {
+		Collection<String> mensajes;
+		listCompras = new ArrayList<Compra>();
+		try {
+			if (SessionManager.isLogged()) {
+				usuario = SessionManager.consultarUsuarioActivo();
+				if (!UsuarioBs.isCliente(usuario)) {
+					resultado = Action.LOGIN;
+					return resultado;
+				}
+			} else {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
+			listCompras = CompraBs.findByUserState(usuario, EstadoEnum.FINALIZADA);
+
+			resultado = "history";
+			mensajes = (Collection<String>) SessionManager
+					.get("mensajesAccion");
+			this.setActionMessages(mensajes);
+			SessionManager.delete("mensajesAccion");
+
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public String search() throws Exception {
 		Collection<String> mensajes;
+		listCompraProducto = new ArrayList<CompraProducto>();
 		Set<Producto> oldProductos = new HashSet<Producto>();
 		Set<Producto> newProductos = new HashSet<Producto>();
 		listProductos = new ArrayList<Producto>();
 		boolean isFirst = true;
-
+		Compra compra = null;
 		try {
 			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAlmacen(usuario)) {
@@ -272,7 +361,10 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 			} else {
 				listProductos.addAll(oldProductos);
 			}
-			mensajes = (Collection<String>) SessionManager
+			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
+			if (compra != null) {
+				listCompraProducto.addAll(compra.getProductos());
+			}			mensajes = (Collection<String>) SessionManager
 					.get("mensajesAccion");
 			this.setActionMessages(mensajes);
 			SessionManager.delete("mensajesAccion");
@@ -285,7 +377,7 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		}
 		return resultado;
 	}
-
+	
 	public Set<Producto> intersect(Set<Producto> oldSet, Set<Producto> newSet) {
 		Set<Producto> productos = new HashSet<Producto>();
 		for (Producto oldProducto : oldSet) {
@@ -299,6 +391,138 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		return productos;
 	}
 
+	public String addProduct() throws Exception {
+		Compra compra;
+		String resultado = null;
+		listCompraProducto = new ArrayList<CompraProducto>();
+		try {
+			if (SessionManager.isLogged()) {
+				usuario = SessionManager.consultarUsuarioActivo();
+				if (!UsuarioBs.isCliente(usuario)) {
+					resultado = Action.LOGIN;
+					return resultado;
+				}
+			} else {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
+			
+			CompraBs.addProduct(nbProductoSel, cantProductoSel);
+			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
+			if (compra != null) {
+				listCompraProducto.addAll(compra.getProductos());
+			}			resultado = "added";
+		}catch (ECommerceValidacionException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = "buy";
+		}catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = "buy";
+		} catch (Exception e) {
+			e.printStackTrace();
+			resultado = "buy";
+		}
+		return resultado;
+	}
+	
+	public String editProduct() throws Exception {
+		String resultado = null;
+		Compra compra = null;
+		listCompraProducto = new ArrayList<CompraProducto>();
+		try {
+			if (SessionManager.isLogged()) {
+				usuario = SessionManager.consultarUsuarioActivo();
+				if (!UsuarioBs.isCliente(usuario)) {
+					resultado = Action.LOGIN;
+					return resultado;
+				}
+			} else {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
+			
+			CompraBs.editProduct(nbProductoSel, cantProductoSel);
+			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
+			if (compra != null) {
+				listCompraProducto.addAll(compra.getProductos());
+			}			resultado = "added";
+		}catch (ECommerceValidacionException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = "buy";
+		}catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = "buy";
+		} catch (Exception e) {
+			e.printStackTrace();
+			resultado = "buy";
+		}
+		return resultado;
+	}
+
+	public String deleteProduct() throws Exception {
+		String resultado = null;
+		Compra compra = null;
+		listCompraProducto = new ArrayList<CompraProducto>();
+		try {
+			if (SessionManager.isLogged()) {
+				usuario = SessionManager.consultarUsuarioActivo();
+				if (!UsuarioBs.isCliente(usuario)) {
+					resultado = Action.LOGIN;
+					return resultado;
+				}
+			} else {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
+			
+			CompraBs.deleteProduct(nbProductoSel);
+			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
+			if (compra != null) {
+				listCompraProducto.addAll(compra.getProductos());
+			}			resultado = "added";
+		}catch (ECommerceValidacionException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = "buy";
+		}catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = "buy";
+		} catch (Exception e) {
+			e.printStackTrace();
+			resultado = "buy";
+		}
+		return resultado;
+	}
+
+	public String finishBuy() throws Exception {
+		String resultado = null;
+		try {
+			if (SessionManager.isLogged()) {
+				usuario = SessionManager.consultarUsuarioActivo();
+				if (!UsuarioBs.isCliente(usuario)) {
+					resultado = Action.LOGIN;
+					return resultado;
+				}
+			} else {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
+			
+			CompraBs.finishBuy();
+			resultado = SUCCESS;
+			addActionMessage(getText("MSG5", new String[] { "Su",
+					"compra", "realizada" }));
+
+			SessionManager.set(this.getActionMessages(), "mensajesAccion");
+		}catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			e.printStackTrace();
+			resultado = index();
+		}
+		return resultado;
+	}
+	
 	public void setSession(Map<String, Object> session) {
 		this.userSession = session;
 	}
@@ -388,5 +612,66 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 	public void setListCategorias(List<Categoria> listCategorias) {
 		this.listCategorias = listCategorias;
 	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	
+	public List<Valor> getDetailSearch() {
+		return detailSearch;
+	}
+
+	
+	public void setDetailSearch(List<Valor> detailSearch) {
+		this.detailSearch = detailSearch;
+	}
+
+
+	public String getNbProductoSel() {
+		return nbProductoSel;
+	}
+
+	
+	public void setNbProductoSel(String nbProductoSel) {
+		this.nbProductoSel = nbProductoSel;
+	}
+
+	
+	public String getCantProductoSel() {
+		return cantProductoSel;
+	}
+
+	
+	
+	public void setCantProductoSel(String cantProductoSel) {
+		this.cantProductoSel = cantProductoSel;
+	}
+
+	
+	public List<CompraProducto> getListCompraProducto() {
+		return listCompraProducto;
+	}
+
+	
+	public void setListCompraProducto(List<CompraProducto> listCompraProducto) {
+		this.listCompraProducto = listCompraProducto;
+	}
+
+	
+	public List<Compra> getListCompras() {
+		return listCompras;
+	}
+
+	
+	public void setListCompras(List<Compra> listCompras) {
+		this.listCompras = listCompras;
+	}
+
+	
 
 }

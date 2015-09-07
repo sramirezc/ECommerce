@@ -3,9 +3,7 @@ package mx.ecommerce.bs;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx.ecommerce.dao.AtributoDAO;
 import mx.ecommerce.dao.CategoriaDAO;
-import mx.ecommerce.model.Atributo;
 import mx.ecommerce.model.Categoria;
 import mx.ecommerce.util.ECommerceException;
 import mx.ecommerce.util.ECommerceValidacionException;
@@ -78,7 +76,10 @@ public class CategoriaBs {
 			he.printStackTrace();
 			throw new Exception();
 		}
-		
+		if (categorias == null || categorias.isEmpty()) {
+			throw new ECommerceValidacionException("Atributo no encontrado", "MSG12", new String []{"Categoria", "encontrada"});
+
+		}
 		return categorias.get(0);
 	}
 
