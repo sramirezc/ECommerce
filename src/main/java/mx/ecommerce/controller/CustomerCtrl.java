@@ -45,11 +45,10 @@ import com.opensymphony.xwork2.ModelDriven;
 				"actionName", "customer" }),
 		@Result(name = "buy", type = "dispatcher", location = "buy.jsp"),
 		@Result(name = "history", type = "dispatcher", location = "history.jsp"),
-		@Result(name = "detail", type = "json", params = {
-				"root", "detailSearch" }),
-		@Result(name = "added", type = "json", params = {
-				"root", "listCompraProducto" })
-		})
+		@Result(name = "detail", type = "json", params = { "root",
+				"detailSearch" }),
+		@Result(name = "added", type = "json", params = { "root",
+				"listCompraProducto" }) })
 public class CustomerCtrl extends ActionSupportECommerce implements
 		SessionAware, ModelDriven<Usuario> {
 
@@ -65,15 +64,14 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 	private String jsonCategoriasSel;
 	private String searchProducto;
 	private List<Valor> detailSearch;
-	
+
 	private String nbProductoSel;
 	private String cantProductoSel;
 	private List<CompraProducto> listCompraProducto;
-	
+
 	private List<Producto> listProductos;
 	private List<Categoria> listCategorias;
 	private List<Compra> listCompras;
-
 
 	@SuppressWarnings("unchecked")
 	public String index() throws Exception {
@@ -219,7 +217,7 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 				resultado = Action.LOGIN;
 				return resultado;
 			}
-			
+
 			resultado = "buy";
 			listProductos = ProductoBs.findAll();
 			listCategorias = CategoriaBs.findAll();
@@ -264,7 +262,8 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
 			if (compra != null) {
 				listCompraProducto.addAll(compra.getProductos());
-			}			resultado = "detail";
+			}
+			resultado = "detail";
 			mensajes = (Collection<String>) SessionManager
 					.get("mensajesAccion");
 			this.setActionMessages(mensajes);
@@ -278,7 +277,7 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		}
 		return resultado;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public String history() throws Exception {
 		Collection<String> mensajes;
@@ -294,7 +293,8 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 				resultado = Action.LOGIN;
 				return resultado;
 			}
-			listCompras = CompraBs.findByUserState(usuario, EstadoEnum.FINALIZADA);
+			listCompras = CompraBs.findByUserState(usuario,
+					EstadoEnum.FINALIZADA);
 
 			resultado = "history";
 			mensajes = (Collection<String>) SessionManager
@@ -310,7 +310,7 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		}
 		return resultado;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public String search() throws Exception {
 		Collection<String> mensajes;
@@ -328,9 +328,8 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 			resultado = "buy";
 			listCategorias = CategoriaBs.findAll();
 			listProductos.clear();
-			searchByCategoria:
-			for (Categoria categoria : JsonUtil.mapJSONToArrayList(
-					jsonCategoriasSel, Categoria.class)) {
+			searchByCategoria: for (Categoria categoria : JsonUtil
+					.mapJSONToArrayList(jsonCategoriasSel, Categoria.class)) {
 				newProductos.clear();
 				for (CategoriaProducto categoriaProducto : CategoriaBs
 						.findByName(categoria.getNombre()).getProductos()) {
@@ -352,7 +351,7 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 					if (oldProductos.isEmpty()) {
 						break searchByCategoria;
 					}
-				}	
+				}
 			}
 
 			if (JsonUtil.mapJSONToArrayList(jsonCategoriasSel, Categoria.class)
@@ -364,7 +363,8 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
 			if (compra != null) {
 				listCompraProducto.addAll(compra.getProductos());
-			}			mensajes = (Collection<String>) SessionManager
+			}
+			mensajes = (Collection<String>) SessionManager
 					.get("mensajesAccion");
 			this.setActionMessages(mensajes);
 			SessionManager.delete("mensajesAccion");
@@ -377,7 +377,7 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		}
 		return resultado;
 	}
-	
+
 	public Set<Producto> intersect(Set<Producto> oldSet, Set<Producto> newSet) {
 		Set<Producto> productos = new HashSet<Producto>();
 		for (Producto oldProducto : oldSet) {
@@ -406,16 +406,17 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 				resultado = Action.LOGIN;
 				return resultado;
 			}
-			
+
 			CompraBs.addProduct(nbProductoSel, cantProductoSel);
 			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
 			if (compra != null) {
 				listCompraProducto.addAll(compra.getProductos());
-			}			resultado = "added";
-		}catch (ECommerceValidacionException pe) {
+			}
+			resultado = "added";
+		} catch (ECommerceValidacionException pe) {
 			ErrorManager.agregaMensajeError(this, pe);
 			resultado = "buy";
-		}catch (ECommerceException pe) {
+		} catch (ECommerceException pe) {
 			ErrorManager.agregaMensajeError(this, pe);
 			resultado = "buy";
 		} catch (Exception e) {
@@ -424,7 +425,7 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		}
 		return resultado;
 	}
-	
+
 	public String editProduct() throws Exception {
 		String resultado = null;
 		Compra compra = null;
@@ -440,16 +441,17 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 				resultado = Action.LOGIN;
 				return resultado;
 			}
-			
+
 			CompraBs.editProduct(nbProductoSel, cantProductoSel);
 			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
 			if (compra != null) {
 				listCompraProducto.addAll(compra.getProductos());
-			}			resultado = "added";
-		}catch (ECommerceValidacionException pe) {
+			}
+			resultado = "added";
+		} catch (ECommerceValidacionException pe) {
 			ErrorManager.agregaMensajeError(this, pe);
 			resultado = "buy";
-		}catch (ECommerceException pe) {
+		} catch (ECommerceException pe) {
 			ErrorManager.agregaMensajeError(this, pe);
 			resultado = "buy";
 		} catch (Exception e) {
@@ -474,16 +476,17 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 				resultado = Action.LOGIN;
 				return resultado;
 			}
-			
+
 			CompraBs.deleteProduct(nbProductoSel);
 			compra = CompraBs.findByState(EstadoEnum.PENDIENTE);
 			if (compra != null) {
 				listCompraProducto.addAll(compra.getProductos());
-			}			resultado = "added";
-		}catch (ECommerceValidacionException pe) {
+			}
+			resultado = "added";
+		} catch (ECommerceValidacionException pe) {
 			ErrorManager.agregaMensajeError(this, pe);
 			resultado = "buy";
-		}catch (ECommerceException pe) {
+		} catch (ECommerceException pe) {
 			ErrorManager.agregaMensajeError(this, pe);
 			resultado = "buy";
 		} catch (Exception e) {
@@ -506,14 +509,14 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 				resultado = Action.LOGIN;
 				return resultado;
 			}
-			
+
 			CompraBs.finishBuy();
 			resultado = SUCCESS;
-			addActionMessage(getText("MSG5", new String[] { "Su",
-					"compra", "realizada" }));
+			addActionMessage(getText("MSG5", new String[] { "Su", "compra",
+					"realizada" }));
 
 			SessionManager.set(this.getActionMessages(), "mensajesAccion");
-		}catch (ECommerceException pe) {
+		} catch (ECommerceException pe) {
 			ErrorManager.agregaMensajeError(this, pe);
 			resultado = index();
 		} catch (Exception e) {
@@ -522,7 +525,7 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		}
 		return resultado;
 	}
-	
+
 	public void setSession(Map<String, Object> session) {
 		this.userSession = session;
 	}
@@ -563,52 +566,42 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		}
 	}
 
-	
 	public String getJsonCategorias() {
 		return jsonCategorias;
 	}
-
 
 	public void setJsonCategorias(String jsonCategorias) {
 		this.jsonCategorias = jsonCategorias;
 	}
 
-
 	public String getJsonCategoriasSel() {
 		return jsonCategoriasSel;
 	}
-
 
 	public void setJsonCategoriasSel(String jsonCategoriasSel) {
 		this.jsonCategoriasSel = jsonCategoriasSel;
 	}
 
-
 	public String getSearchProducto() {
 		return searchProducto;
 	}
-
 
 	public void setSearchProducto(String searchProducto) {
 		this.searchProducto = searchProducto;
 	}
 
-
 	public List<Producto> getListProductos() {
 		return listProductos;
 	}
-
 
 	public void setListProductos(List<Producto> listProductos) {
 		this.listProductos = listProductos;
 	}
 
-	
 	public List<Categoria> getListCategorias() {
 		return listCategorias;
 	}
 
-	
 	public void setListCategorias(List<Categoria> listCategorias) {
 		this.listCategorias = listCategorias;
 	}
@@ -621,57 +614,44 @@ public class CustomerCtrl extends ActionSupportECommerce implements
 		this.usuario = usuario;
 	}
 
-	
 	public List<Valor> getDetailSearch() {
 		return detailSearch;
 	}
 
-	
 	public void setDetailSearch(List<Valor> detailSearch) {
 		this.detailSearch = detailSearch;
 	}
-
 
 	public String getNbProductoSel() {
 		return nbProductoSel;
 	}
 
-	
 	public void setNbProductoSel(String nbProductoSel) {
 		this.nbProductoSel = nbProductoSel;
 	}
 
-	
 	public String getCantProductoSel() {
 		return cantProductoSel;
 	}
 
-	
-	
 	public void setCantProductoSel(String cantProductoSel) {
 		this.cantProductoSel = cantProductoSel;
 	}
 
-	
 	public List<CompraProducto> getListCompraProducto() {
 		return listCompraProducto;
 	}
 
-	
 	public void setListCompraProducto(List<CompraProducto> listCompraProducto) {
 		this.listCompraProducto = listCompraProducto;
 	}
 
-	
 	public List<Compra> getListCompras() {
 		return listCompras;
 	}
 
-	
 	public void setListCompras(List<Compra> listCompras) {
 		this.listCompras = listCompras;
 	}
-
-	
 
 }

@@ -36,3 +36,55 @@ function infoToJson(idTable) {
 	document.getElementById("jsonCategoriasSel").value = jsonCategoriasSel;
 
 }
+
+function verMas(nbProducto){
+	rutaMoreProducto = contextPath + '/store!showDetails';
+	$.ajax({
+		dataType : 'json',
+		url : rutaMoreProducto,
+		type : "post",
+		data : {
+			searchProducto : nbProducto
+		},
+		success : function(data) {
+			showDetails(data, nbProducto);
+		},
+		error : function(err) {
+			alert("AJAX error: " + JSON.stringify(err, null, 2));
+		}
+	});
+}
+
+function showDetails(JSONProducto) {
+	$("#atributosProducto").empty();
+	if (JSONProducto != "") {
+		$.each(JSONProducto, function(i, item) {
+			var atributo = document.getElementById("detail_"+ item.atributoCategoria.atributo.nombre);
+			if (atributo == null) {
+				$("#atributosProducto").append(
+						construirInput(item.atributoCategoria.atributo.nombre, item.valor));
+			}
+		});
+		$('#detallesProducto').dialog('open');
+	}
+}
+
+function construirInput(labelAtributo, valor) {
+	var input = 
+		"<div id = \"detail_"+labelAtributo+"\">" +
+		"<tr>" +
+		"<td><b>" +
+		labelAtributo +
+		": </b></td>" +
+		"<td><i>" + 
+		valor +					
+		"</i></td>" + 
+		"</tr>" +
+		"</div>";
+	return input;
+}
+
+function cerrarDetalle() {
+	$('#detallesProducto').dialog('close');
+}
+

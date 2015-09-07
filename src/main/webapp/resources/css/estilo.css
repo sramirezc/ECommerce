@@ -48,9 +48,9 @@ a {
 	position: absolute;
 	top: 40px;
 	/*left: 25%;*/
-	left: 15%;
+	left: 10%;
 	padding: 30px;
-	width: 60%;
+	width: 70%;
 	heigth: 100%;
 	z-index: 96;
 	visibility: hidden;
@@ -334,7 +334,7 @@ a.menuCUSel:hover {
 }
 
 .inputFormulario {
-	min-width: 200px;
+	min-width: 300px;
 }
 
 textarea { 

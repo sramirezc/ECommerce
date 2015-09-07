@@ -78,8 +78,32 @@ public class AccessBs {
 		
 	}
 	
-	public static void verificarPermisos(String tmp, Usuario usuario) {
+	public static String rpHash(String value) {
+		int hash = 5381;
+		value = value.toUpperCase();
+		for(int i = 0; i < value.length(); i++) {
+			hash = ((hash << 5) + hash) + value.charAt(i);
+		}
+		return String.valueOf(hash);
+	}
+
+	public static void showErrorCaptcha() {
+		throw new ECommerceValidacionException("Captcha incorrecto", "MSG15");
 		
+	}
+
+	public static boolean verificarCaptcha(String captcha, String hash) {
+		if (Validador.esNuloOVacio(captcha)) {
+			throw new ECommerceValidacionException(
+					"El usuario no ingresó el captcha", "MSG15", null,
+					"captcha");
+		}
+		if (!rpHash(captcha).equals(hash)) {
+			throw new ECommerceValidacionException(
+					"El usuario ingresó el captcha incorrecto", "MSG15", null,
+					"captcha");
+		}
+		return false;
 	}
 
 }

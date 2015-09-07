@@ -81,6 +81,10 @@
 
 					
 					<td align="center">
+					<a onclick="verMas('${producto.nombre}')"><img id="" class="button"
+									title="Detalles"
+									src="${pageContext.request.contextPath}/resources/images/icons/detail.png" /></a>
+									
 						${blanks}
 						<!-- Modificar producto -->	
 						<s:url var="urlModificar" value="%{#pageContext.request.contextPath}/store/%{#producto.id}/edit"/>			
@@ -111,6 +115,26 @@
 	</div>
 	</s:form>
 	</div>
+	
+	<!-- Detalles producto -->
+	<sj:dialog id="detallesProducto" title="Detalles" autoOpen="false"
+		minHeight="150" minWidth="200" modal="true" draggable="false">
+		<s:form autocomplete="off" id="frmDetallesProducto" name="frmDetallesProducto" theme="simple">
+				<div class="seccion" align="left">
+				<s:text name="Información del producto:"></s:text>
+				<br/>
+				<br/>
+				<table>
+					<div id = "atributosProducto">
+					</div>
+				</table>
+				</div>
+			<br />
+			<div align="center">
+				<input id = "btnConfirmar" type="button" onclick="cerrarDetalle()" value="Aceptar"/> 
+			</div>
+		</s:form>
+	</sj:dialog>
 </body>
 </html>
 </jsp:root>

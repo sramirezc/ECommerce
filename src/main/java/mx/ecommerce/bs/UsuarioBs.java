@@ -21,7 +21,7 @@ public class UsuarioBs {
 				throw new ECommerceValidacionException("El usuario "
 						+ model.getCorreo() + " ya existe.", "MSG7",
 						new String[] { "El", "usuario", model.getCorreo() },
-						"model.nombre");
+						"model.correo");
 			}
 			validar(model);
 			new UsuarioDAO().save(model);
@@ -161,6 +161,11 @@ public class UsuarioBs {
 			throw new ECommerceValidacionException(
 					"El usuario ingreso un password muy largo.", "MSG6",
 					new String[] { "20", "caracteres" }, "model.password");
+		}
+		if (Validador.isDuplicado(model)) {
+			throw new ECommerceValidacionException(
+					"El usuario ya existe.", "MSG7",
+					new String[] { "El", "usuario", model.getCorreo() }, "model.correo");
 		}
 	}
 

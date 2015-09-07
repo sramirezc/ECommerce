@@ -10,8 +10,10 @@ $(document).ready(function() {
 		var parsedJson = JSON.parse(jsonCategorias);
 		$.each(parsedJson, function(i, item) {
 			var categoria = item.nombre;
-			document.getElementById(categoria).checked = true;
-			getInputs(categoria);
+			if (document.getElementById(categoria) != null) {
+				document.getElementById(categoria).checked = true;
+				getInputs(categoria);
+			}
 		});
 	}
 	

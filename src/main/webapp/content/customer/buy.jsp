@@ -143,7 +143,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="label obligatorio"><s:text name="labelProducto" /></td>
+						<td class="label obligatorio"><s:text name="labelCantidad" /></td>
 						<td>
 							<input id="cantProductoAdded" class="inputFormulario ui-widget" type="text" maxlength="10"  name="cantProductoAdded"/>
 						</td>

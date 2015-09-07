@@ -37,7 +37,9 @@ import com.opensymphony.xwork2.ModelDriven;
 		@Result(name = ActionSupportECommerce.SUCCESS, type = "redirectAction", params = {
 				"actionName", "store" }),
 		@Result(name = "atributosCategoriaSel", type = "json", params = {
-				"root", "atributosCategoriaSel" }) })
+				"root", "atributosCategoriaSel" }),
+		@Result(name = "detail", type = "json", params = { "root",
+				"detailSearch" }), })
 public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		ModelDriven<Producto> {
 
@@ -52,6 +54,8 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 	private String jsonCategorias;
 	private String jsonCategoriasSel;
 	private String searchProducto;
+
+	private List<Valor> detailSearch;
 
 	private Producto model;
 	private List<Producto> listProductos;
@@ -166,7 +170,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 				resultado = Action.LOGIN;
 				return resultado;
 			}
-			
+
 			agregarAtributos();
 			ProductoBs.update(model);
 			resultado = SUCCESS;
@@ -238,32 +242,35 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			resultado = INDEX;
 			listCategorias = CategoriaBs.findAll();
 			listProductos.clear();
-			searchByCategoria:
-			for (Categoria categoria : JsonUtil.mapJSONToArrayList(jsonCategoriasSel, Categoria.class)) {
+			searchByCategoria: for (Categoria categoria : JsonUtil
+					.mapJSONToArrayList(jsonCategoriasSel, Categoria.class)) {
 				newProductos.clear();
-					for (CategoriaProducto categoriaProducto : CategoriaBs.findByName(categoria.getNombre()).getProductos()) {
-						if (searchProducto != null && searchProducto != "") {
-							if (categoriaProducto.getProducto().getNombre().contains(searchProducto)) {
-								newProductos.add(categoriaProducto.getProducto());
-							}
-						} else {
+				for (CategoriaProducto categoriaProducto : CategoriaBs
+						.findByName(categoria.getNombre()).getProductos()) {
+					if (searchProducto != null && searchProducto != "") {
+						if (categoriaProducto.getProducto().getNombre()
+								.contains(searchProducto)) {
 							newProductos.add(categoriaProducto.getProducto());
 						}
-					}
-					
-					if (isFirst) {
-						oldProductos.addAll(newProductos);
-						isFirst = false;
 					} else {
-						oldProductos = intersect(oldProductos, newProductos);
-						if (oldProductos.isEmpty()) {
-							break searchByCategoria;
-						}
-					}				
+						newProductos.add(categoriaProducto.getProducto());
+					}
+				}
+
+				if (isFirst) {
+					oldProductos.addAll(newProductos);
+					isFirst = false;
+				} else {
+					oldProductos = intersect(oldProductos, newProductos);
+					if (oldProductos.isEmpty()) {
+						break searchByCategoria;
+					}
+				}
 			}
-			
-			if (JsonUtil.mapJSONToArrayList(jsonCategoriasSel, Categoria.class).isEmpty()) {
-				listProductos =  ProductoBs.findAll();
+
+			if (JsonUtil.mapJSONToArrayList(jsonCategoriasSel, Categoria.class)
+					.isEmpty()) {
+				listProductos = ProductoBs.findAll();
 			} else {
 				listProductos.addAll(oldProductos);
 			}
@@ -279,8 +286,8 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 			e.printStackTrace();
 		}
 		return resultado;
-	}	
-	
+	}
+
 	public void agregarAtributos() throws Exception {
 		List<Categoria> categoriasVista = new ArrayList<Categoria>();
 		List<Valor> valoresVista = new ArrayList<Valor>();
@@ -328,27 +335,26 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		Atributo atributoAux = null;
 		AtributoCategoria atributoCategoriaAux = null;
 
-		
 		for (CategoriaProducto categoriaProducto : model.getCategorias()) {
 			categoriaAux = new Categoria();
-			categoriaAux.setNombre(categoriaProducto.getCategoria().getNombre());
+			categoriaAux
+					.setNombre(categoriaProducto.getCategoria().getNombre());
 			categorias.add(categoriaAux);
 			for (Valor valor : categoriaProducto.getValores()) {
 				valorAux = new Valor();
 				atributoAux = new Atributo();
 				atributoCategoriaAux = new AtributoCategoria();
-				atributoAux.setNombre(valor.getAtributoCategoria().getAtributo().getNombre());
+				atributoAux.setNombre(valor.getAtributoCategoria()
+						.getAtributo().getNombre());
 				atributoCategoriaAux.setAtributo(atributoAux);
 				valorAux.setValor(valor.getValor());
 				valorAux.setAtributoCategoria(atributoCategoriaAux);
 				valores.add(valorAux);
 			}
 		}
-		
+
 		this.jsonCategorias = JsonUtil.mapListToJSON(categorias);
 		this.jsonValores = JsonUtil.mapListToJSON(valores);
-
-
 
 	}
 
@@ -361,9 +367,44 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 				}
 			}
 		}
-		
+
 		return productos;
 	}
+
+	@SuppressWarnings("unchecked")
+	public String showDetails() throws Exception {
+		Collection<String> mensajes;
+		detailSearch = new ArrayList<Valor>();
+		try {
+			if (SessionManager.isLogged()) {
+				usuario = SessionManager.consultarUsuarioActivo();
+				if (!UsuarioBs.isAlmacen(usuario)) {
+					resultado = Action.LOGIN;
+					return resultado;
+				}
+			} else {
+				resultado = Action.LOGIN;
+				return resultado;
+			}
+			Producto producto = ProductoBs.findByName(searchProducto);
+			for (CategoriaProducto categoriaProducto : producto.getCategorias()) {
+				detailSearch.addAll(categoriaProducto.getValores());
+			}
+			resultado = "detail";
+			mensajes = (Collection<String>) SessionManager
+					.get("mensajesAccion");
+			this.setActionMessages(mensajes);
+			SessionManager.delete("mensajesAccion");
+
+		} catch (ECommerceException pe) {
+			ErrorManager.agregaMensajeError(this, pe);
+			resultado = index();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
 
 	public void setSession(Map<String, Object> session) {
 		this.userSession = session;
@@ -385,6 +426,7 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 		return idSel;
 	}
 
+	
 	public void setIdSel(Integer idSel) throws Exception {
 		this.idSel = idSel;
 		if (idSel != null)
@@ -447,17 +489,31 @@ public class StoreCtrl extends ActionSupportECommerce implements SessionAware,
 	public void setJsonCategoriasSel(String jsonCategoriasSel) {
 		this.jsonCategoriasSel = jsonCategoriasSel;
 	}
-	
+
 	public List<Categoria> getListCategorias() {
 		return listCategorias;
 	}
-	
+
 	public void setListCategorias(List<Categoria> listCategorias) {
 		this.listCategorias = listCategorias;
 	}
-	
 
 	
+	
+	public List<Valor> getDetailSearch() {
+		return detailSearch;
+	}
+
+
+	public void setDetailSearch(List<Valor> detailSearch) {
+		this.detailSearch = detailSearch;
+	}
+
+	
+	public void setModel(Producto model) {
+		this.model = model;
+	}
 
 	
 }
+

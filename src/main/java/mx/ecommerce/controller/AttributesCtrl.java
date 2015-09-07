@@ -161,6 +161,7 @@ public class AttributesCtrl extends ActionSupportECommerce implements
 	public String destroy() throws Exception {
 		String resultado = null;
 		try {
+			usuario = SessionManager.consultarUsuarioActivo();
 			if (!UsuarioBs.isAdministrador(usuario)) {
 				resultado = Action.LOGIN;
 				return resultado;

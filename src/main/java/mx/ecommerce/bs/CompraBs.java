@@ -173,6 +173,7 @@ private static CompraProducto findByProducto(Producto producto,
 				producto.setCantidad(producto.getCantidad()
 						- Integer.parseInt(cantProductoSel));
 				new CompraDAO().save(compra);
+				new ProductoDAO().update(producto);
 			} else {
 				compraProducto = findByProducto(producto, compra);
 				if (compraProducto == null) {
@@ -182,7 +183,7 @@ private static CompraProducto findByProducto(Producto producto,
 					producto.setCantidad(producto.getCantidad()
 							- Integer.parseInt(cantProductoSel));
 					new CompraDAO().update(compra);
-
+					new ProductoDAO().update(producto);
 				} else {
 					compraProducto.setCantidad(compraProducto.getCantidad()
 							+ Integer.parseInt(cantProductoSel));

@@ -42,7 +42,6 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 	String resultado;
 	private String userName;
 	private String password;
-	
 
 	@SuppressWarnings("unchecked")
 	public String index() {
@@ -81,6 +80,9 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 	public String login() throws Exception {
 		Map<String, Object> session = null;
 		try {
+			AccessBs.verificarCaptcha(request.getParameter("captcha"), request.getParameter("captchaHash"));
+			
+
 			if (userSession != null) {
 				userSession.clear();
 			}
@@ -137,7 +139,7 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 		try {
 			AccessBs.recuperarContrasenia(userName);
 			resultado = INDEX;
-			addActionMessage(getText("MSG32"));
+			addActionMessage(getText("MSG16"));
 
 			SessionManager.set(this.getActionMessages(), "mensajesAccion");
 
@@ -166,7 +168,7 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 		}
 		return "error";
 	}
-
+	
 	public void setSession(Map<String, Object> session) {
 		this.userSession = session;
 	}
