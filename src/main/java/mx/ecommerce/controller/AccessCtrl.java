@@ -44,11 +44,6 @@ public class AccessCtrl extends ActionSupportECommerce implements SessionAware {
 	private String password;
 	
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mClass = new AnotherClass(this);
-    }
-
 	@SuppressWarnings("unchecked")
 	public String index() {
 		Collection<String> mensajes;

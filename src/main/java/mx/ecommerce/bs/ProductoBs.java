@@ -104,8 +104,7 @@ public class ProductoBs {
 		}
 		
 		if (Validador.esNulo(model.getCantidad())) {
-			throw new ECommerceValidacionException(
-					"El usuario no ingresó la cantidad del producto.", "MSG2",
+			throw new ECommerceValidacionException("El usuario no ingresó la cantidad del producto.", "MSG2",
 					null, "model.cantidad");
 		}
 		

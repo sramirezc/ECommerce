@@ -4,7 +4,6 @@
 	<jsp:directive.page language="java"
 		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
-<%@ taglib uri="http://code.google.com/p/jcaptcha4struts2/taglib/2.0" prefix="jcaptcha" %>
 
 <head>
 <title>Iniciar sesión</title>
