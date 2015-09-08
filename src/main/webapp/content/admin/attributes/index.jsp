@@ -5,7 +5,7 @@
 		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Actores</title>
+<title>Atributos</title>
 <![CDATA[
 	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/content/admin/attributes/js/index.js"></script>
 ]]>

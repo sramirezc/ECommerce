@@ -6,7 +6,7 @@
 		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Registrar Categoria</title>
+<title>Registrar Categoría</title>
 <![CDATA[
 	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/resources/scripts/constructores.js"></script>
 	<script type="text/javascript" charset="utf8" src="${pageContext.request.contextPath}/resources/scripts/validaciones.js"></script>
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-	<h1>Registrar Categoria</h1>
+	<h1>Registrar Categoría</h1>
 
 	<s:actionmessage theme="jquery" />
 	<s:actionerror theme="jquery" />
