@@ -11,7 +11,7 @@ import mx.ecommerce.model.Usuario;
 import mx.ecommerce.util.Correo;
 import mx.ecommerce.util.ECommerceValidacionException;
 import mx.ecommerce.util.Validador;
-
+ 
 public class AccessBs {
 
 	public static Usuario verificarLogin(String userName, String password) {
