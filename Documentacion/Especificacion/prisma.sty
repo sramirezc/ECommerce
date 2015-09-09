@@ -1,0 +1,60 @@
+%comandos propios para este proyecto
+% \newcommand{\autores}{{Natalia Giselle Hernández Sánchez, Sergio Ramírez Camacho}}
+% \newcommand{\prisma}{{PRISMA}}
+% \newcommand{\editor}{{Prototipo de editor de casos de uso para la construcción asistida de casos de prueba}}
+% \renewcommand*\rmdefault{ppl}
+
+\newcommand{\tituloTrabajo}{{Prototipo de editor de casos de uso para la construcción asistida de casos de prueba}}
+\newcommand{\noRegistro}{{2014-B064}}
+\newcommand{\resumen}{{
+	El Editor de Casos de uso es una herramienta que permite documentar Casos de uso mediante el registro 
+	de Entidades, Atributos, Reglas de negocio, Interfaces, Mensajes, Actores y Trayectorias. Esta herramienta permite
+	indicar las relaciones que tienen los elementos ya mencionados para modelar el negocio del sistema que se desea documentar.
+}}
+\newcommand{\palabrasClave}{{Documentación de Sistemas, Ingeniería de Software, Proceso de Software.}}
+\newcommand{\autores}{{Natalia Giselle Hernández Sánchez, \\Sergio Ramírez Camacho}}
+
+%Hacer referencia a las imágenes
+\newcommand{\refIM}[2]{%
+	\hyperlink{#1}{\ref{#1}\ {#2}}%
+}
+
+%Incluir imágenes 
+\newcommand{\IMfig}[4][0.7]{%
+	\begin{figure}[htpb!]%
+		\begin{center}%
+			\hypertarget{#3}{\includegraphics[width=#1\textwidth]{#2}}%
+			\caption{#4}
+			\label{#3}%
+		\end{center}%
+	\end{figure}%
+}
+
+%Tabla análisis de riesgo
+\newenvironment{riesgos}
+{
+\begin{longtable}{| p{.28\textwidth} | p{.12\textwidth} | p{.08\textwidth} | p{.40\textwidth} |}%
+	\rowcolor{black}%
+	\riesgo{\color{white}Descripción del riesgo}{\color{white}Probabilidad percibida}{\color{white}Impacto}{\color{white}Estrategia de reducción}%
+}
+{
+	\end{longtable}
+}
+
+%Riesgo
+\newcommand{\riesgo}[4]{{#1} & {#2} & {#3} & {#4}\\ \hline}%
+
+\newcommand{\ioEscribirSeleccionar}{Se escribe una palabra y se selecciona una sugerencia de la lista}
+
+%Comandos de los botones
+\newcommand{\btnNuevo}{\imgInline{iconos/mas.png}}
+\newcommand{\btnCU}{\imgInline{iconos/cu.png}}
+\newcommand{\btnIU}{\imgInline{iconos/iu.png}}
+\newcommand{\btnConsulta}{\imgInline{iconos/ver.png}}
+\newcommand{\btnEditar}{\imgInline{iconos/editar.png}}
+\newcommand{\btnEliminar}{\imgInline{iconos/eliminar.png}}
+\newcommand{\btnRevisar}{\imgInline{iconos/revisar.png}}
+\newcommand{\btnAgregar}{\imgInline{iconos/mas.png}}
+\newcommand{\btnTray}{\imgInline{iconos/T.png}}
+\newcommand{\btnExt}{\imgInline{iconos/P.png}}
+

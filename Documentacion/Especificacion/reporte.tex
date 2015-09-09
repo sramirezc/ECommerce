@@ -1,0 +1,42 @@
+ \documentclass[10pt]{book}
+\usepackage{cdt/cdtBusiness}
+\usepackage{prisma}
+\usepackage{enumerate}
+\usepackage{subfigure}
+\usepackage{cite}
+\usepackage{ragged2e}
+\pagenumbering{roman}
+
+
+
+\begin{document}
+\bibliographystyle{IEEEtran}
+%=========================================================
+% Portada
+%\ThisLRCornerWallPaper{1}{cdt/theme/agua.png}
+\thispagestyle{empty}
+
+\cfinput{portada}
+% \makeFirmas
+
+%=========================================================
+% Indices del documento
+\frontmatter
+% \LRCornerWallPaper{1}{cdt/theme/pleca.png}
+%\listoftables
+\mainmatter
+
+% Para esconder la información del documentador se descomenta el \hideControlVersion
+ \hideControlVersion
+
+%---------------------------------------------------------------------
+\chapter{Especificación de la Arquitectura}
+\cfinput{arquitectura}
+
+% \clossing
+
+%---------------------------------------------------------------------
+
+\end{document}
+
+
