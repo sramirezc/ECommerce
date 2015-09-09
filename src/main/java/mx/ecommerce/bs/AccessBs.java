@@ -25,7 +25,7 @@ public class AccessBs {
 		if (Validador.esNuloOVacio(password)) {
 			throw new ECommerceValidacionException(
 					"El usuario no ingresó la contraseña.", "MSG2", null,
-					"password");
+					"password"); 
 		}
 		
 		try {
